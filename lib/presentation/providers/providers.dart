@@ -17,6 +17,7 @@ import '../../data/repositories/session_repository.dart';
 import '../../data/repositories/customer_repository.dart';
 import '../../core/utils/formatters.dart';
 import '../../core/utils/price_calculator.dart';
+import '../../core/services/activation_api_service.dart';
 
 // ════════════════════════════════════════════════════════════
 //  REPOSITORY PROVIDERS
@@ -589,4 +590,12 @@ class AppLanguageNotifier extends Notifier<AppLanguage> {
 
 final appLanguageProvider = NotifierProvider<AppLanguageNotifier, AppLanguage>(
   AppLanguageNotifier.new,
+);
+
+// ════════════════════════════════════════════════════════════
+//  DEVICE ACTIVATION PROVIDERS
+// ════════════════════════════════════════════════════════════
+
+final activationApiServiceProvider = Provider<ActivationApiService>(
+  (ref) => ActivationApiService(),
 );

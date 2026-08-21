@@ -12,8 +12,7 @@ import 'core/services/notification_service.dart';
 import 'data/local/isar_service.dart';
 import 'data/models/app_settings_model.dart';
 import 'presentation/providers/providers.dart';
-import 'presentation/screens/home_screen.dart';
-import 'presentation/screens/license_screen.dart';
+import 'presentation/screens/activation_gate_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,13 +29,11 @@ void main() async {
   await IsarService.initialize();
   await NotificationService().initialize();
 
-  bool isLicensed = false;
   ThemeMode initialTheme = ThemeMode.system;
   AppLanguage initialLang = AppLanguage.system;
 
   final settings = await IsarService.isar.appSettingsModels.get(1);
   if (settings != null) {
-    isLicensed = settings.isLicensed;
     initialTheme = ThemeMode.values[settings.themeModeIndex];
     initialLang = AppLanguage.values[settings.languageIndex];
   }
@@ -51,14 +48,13 @@ void main() async {
           () => AppLanguageNotifier(initialLang: initialLang),
         ),
       ],
-      child: BilliardApp(isLicensed: isLicensed),
+      child: const BilliardApp(),
     ),
   );
 }
 
 class BilliardApp extends ConsumerWidget {
-  final bool isLicensed;
-  const BilliardApp({super.key, required this.isLicensed});
+  const BilliardApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -83,7 +79,7 @@ class BilliardApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: isLicensed ? const HomeScreen() : const LicenseScreen(),
+      home: const ActivationGateScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
