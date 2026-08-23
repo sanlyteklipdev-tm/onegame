@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 class ApiConfig {
-  static const String baseUrl = 'http://216.250.13.114:3001';
+  static const String baseUrl = 'http://216.250.13.114:3100';
 }
 
 class WrongCredentialsException implements Exception {}
@@ -33,6 +33,7 @@ class ActivationApiService {
         '/api/app/login',
         data: {'username': username, 'password': password},
       );
+      print("Response: $response");
       return response.data['token'] as String;
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
