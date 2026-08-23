@@ -47,6 +47,7 @@ class NotificationService {
         InitializationSettings(
           android: initializationSettingsAndroid,
           iOS: initializationSettingsDarwin,
+          macOS: initializationSettingsDarwin,
         );
 
     await _notificationsPlugin.initialize(
@@ -147,6 +148,7 @@ class NotificationService {
     final NotificationDetails details = NotificationDetails(
       android: androidDetails,
       iOS: darwinDetails,
+      macOS: darwinDetails,
     );
 
     try {

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 class ApiConfig {
-  static const String baseUrl = 'http://216.250.13.114:3001';
+  static const String baseUrl = 'http://216.250.13.114:3100';
 }
 
 class WrongCredentialsException implements Exception {}
