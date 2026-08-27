@@ -12,7 +12,7 @@ import 'core/services/notification_service.dart';
 import 'data/local/isar_service.dart';
 import 'data/models/app_settings_model.dart';
 import 'presentation/providers/providers.dart';
-import 'presentation/screens/activation_gate_screen.dart';
+import 'presentation/screens/activation_gate_screen/activation_gate_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

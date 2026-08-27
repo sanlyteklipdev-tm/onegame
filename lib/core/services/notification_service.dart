@@ -225,12 +225,20 @@ class NotificationService {
 
   Future<void> cancelReminder(int sessionId) async {
     final int notificationId = sessionId % 2147483647;
-    
+
     if (Platform.isWindows) {
+      // flutter_local_notifications Windows-i goldamaýar (bu platformada
+      // local_notifier ulanylýar). Plugin çagyrylsa MissingPluginException
+      // atýar — şonuň üçin diňe timer ýatyrylýar-da, çykylýar.
       _activeTimers[notificationId]?.cancel();
       _activeTimers.remove(notificationId);
+      return;
     }
-    
-    await _notificationsPlugin.cancel(notificationId);
+
+    try {
+      await _notificationsPlugin.cancel(notificationId);
+    } catch (e) {
+      dev.log('Notification cancel error: $e');
+    }
   }
 }

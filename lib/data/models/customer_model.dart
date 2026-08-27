@@ -11,6 +11,9 @@ class CustomerModel {
 
   late double discountPercentage;
 
+  /// Habarlaşmak üçin telefon (hökman däl)
+  String? phone;
+
   @Index()
   late DateTime createdAt;
 
@@ -19,10 +22,12 @@ class CustomerModel {
   factory CustomerModel.create({
     required String name,
     required double discountPercentage,
+    String? phone,
   }) {
     return CustomerModel()
       ..name = name
       ..discountPercentage = discountPercentage
+      ..phone = phone
       ..createdAt = DateTime.now();
   }
 }

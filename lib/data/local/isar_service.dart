@@ -6,6 +6,8 @@ import '../models/player_session_model.dart';
 import '../models/history_log_model.dart';
 import '../models/app_settings_model.dart';
 import '../models/customer_model.dart';
+import '../models/employee_model.dart';
+import '../models/reservation_model.dart';
 
 /// Isar database singleton servisi
 class IsarService {
@@ -24,7 +26,15 @@ class IsarService {
     final dir = await getApplicationDocumentsDirectory();
 
     _isar = await Isar.open(
-      [TableModelSchema, PlayerSessionModelSchema, HistoryLogModelSchema, AppSettingsModelSchema, CustomerModelSchema],
+      [
+        TableModelSchema,
+        PlayerSessionModelSchema,
+        HistoryLogModelSchema,
+        AppSettingsModelSchema,
+        CustomerModelSchema,
+        ReservationModelSchema,
+        EmployeeModelSchema,
+      ],
       directory: dir.path,
       name: 'billiard_db',
       inspector: false, // Production-da false

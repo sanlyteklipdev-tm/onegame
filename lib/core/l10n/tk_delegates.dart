@@ -5,6 +5,53 @@ import 'package:flutter/cupertino.dart';
 class TkMaterialLocalizations extends DefaultMaterialLocalizations {
   const TkMaterialLocalizations();
 
+  static const List<String> _monthsFull = [
+    'Ýanwar', 'Fewral', 'Mart', 'Aprel', 'Maý', 'Iýun',
+    'Iýul', 'Awgust', 'Sentýabr', 'Oktýabr', 'Noýabr', 'Dekabr',
+  ];
+
+  static const List<String> _monthsShort = [
+    'ýan.', 'few.', 'mart', 'apr.', 'maý', 'iýun',
+    'iýul', 'awg.', 'sen.', 'okt.', 'noý.', 'dek.',
+  ];
+
+  /// 0 = ýekşenbe (DateTime.weekday % 7 boýunça)
+  static const List<String> _weekdaysShort = [
+    'ýek.', 'duş.', 'siş.', 'çar.', 'pen.', 'ann.', 'şen.',
+  ];
+
+  static const List<String> _weekdaysFull = [
+    'ýekşenbe', 'duşenbe', 'sişenbe', 'çarşenbe',
+    'penşenbe', 'anna', 'şenbe',
+  ];
+
+  // ── Senenama üçin türkmençe aý we gün atlary ──────────────
+
+  @override
+  List<String> get narrowWeekdays => const ['Ý', 'D', 'S', 'Ç', 'P', 'A', 'Ş'];
+
+  /// Hepde duşenbeden başlaýar
+  @override
+  int get firstDayOfWeekIndex => 1;
+
+  @override
+  String formatMonthYear(DateTime date) =>
+      '${_monthsFull[date.month - 1]} ${date.year}';
+
+  @override
+  String formatShortMonthDay(DateTime date) =>
+      '${date.day} ${_monthsShort[date.month - 1]}';
+
+  @override
+  String formatMediumDate(DateTime date) =>
+      '${_weekdaysShort[date.weekday % 7]}, ${date.day} '
+      '${_monthsShort[date.month - 1]}';
+
+  @override
+  String formatFullDate(DateTime date) =>
+      '${_weekdaysFull[date.weekday % 7]}, ${date.day} '
+      '${_monthsFull[date.month - 1]} ${date.year}';
+
   @override
   String get okButtonLabel => 'OK';
 

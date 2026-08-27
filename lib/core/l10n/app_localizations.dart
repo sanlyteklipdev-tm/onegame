@@ -89,6 +89,36 @@ class S {
     'Try a different search query',
   );
 
+  // ── Işgärler (Staff) ───────────────────────────────
+  String get employees => _t('Işgär', 'Персонал', 'Staff');
+  String get addEmployee =>
+      _t('Işgär goş', 'Добавить сотрудника', 'Add Staff');
+  String get editEmployee =>
+      _t('Işgäri üýtget', 'Изменить сотрудника', 'Edit Staff');
+  String get deleteEmployee =>
+      _t('Işgäri poz', 'Удалить сотрудника', 'Delete Staff');
+  String deleteEmployeeConfirm(String name) => _t(
+    '"$name" pozulyp bilinmez. Dowam etmelimi?',
+    'Сотрудник "$name" будет удалён. Продолжить?',
+    'Staff member "$name" will be deleted. Continue?',
+  );
+  String get noEmployees => _t('Işgär ýok', 'Сотрудников нет', 'No Staff');
+  String get noEmployeesHint => _t(
+    'Işgär goşmak üçin + düwmä basyň',
+    'Нажмите + чтобы добавить сотрудника',
+    'Tap + to add a staff member',
+  );
+  String get employeeName =>
+      _t('Işgäriň ady', 'Имя сотрудника', 'Staff Name');
+  String get employeeCategory =>
+      _t('Kategoriýa', 'Категория', 'Category');
+  String get noEmployee => _t('Işgärsiz', 'Без сотрудника', 'No staff');
+
+  // ── Umumy meýdanlar ────────────────────────────────
+  String get phone => _t('Telefon', 'Телефон', 'Phone');
+  String get phoneOptional =>
+      _t('Hökman däl', 'Необязательно', 'Optional');
+
   // ── Tables Screen ─────────────────────────────────
   String get appTitle => 'Sanly Timer';
   String activeTablesCount(int active, int total) => _t(
@@ -268,6 +298,172 @@ class S {
   String get themeLight => _t('Ýagty', 'Светлая', 'Light');
   String get themeDark => _t('Garaňky', 'Тёмная', 'Dark');
   String get language => _t('Dil', 'Язык', 'Language');
+
+  // ── Device Activation ──────────────────────────────
+  String get activationCheckTitle =>
+      _t('Aktiwlik barlagy', 'Проверка активации', 'Activation Check');
+  String get checkActivation => _t('BARLAMAK', 'ПРОВЕРИТЬ', 'CHECK');
+  String get retry =>
+      _t('GAÝTADAN SYNANYŞMAK', 'ПОВТОРИТЬ', 'RETRY');
+  String get waitingActivationTitle => _t(
+    'Tassyklama garaşylýar',
+    'Ожидание подтверждения',
+    'Awaiting Confirmation',
+  );
+  String get waitingActivationBody => _t(
+    'Dolandyryjy enjamyňyzy tassyklanda, aşakdaky düwmä basyp barlaň.',
+    'Когда администратор подтвердит ваше устройство, нажмите кнопку ниже, чтобы проверить.',
+    'Once the admin confirms your device, tap the button below to check.',
+  );
+  String get deviceNotConfirmedYet => _t(
+    'Enjam heniz tassyklanmady. Garaşyň.',
+    'Устройство ещё не подтверждено. Подождите.',
+    'Device not confirmed yet. Please wait.',
+  );
+  String get deviceActiveMessage => _t(
+    'Enjam aktiw we tassyklandy.',
+    'Устройство активно и подтверждено.',
+    'Device is active and confirmed.',
+  );
+  String get noInternetConnection => _t(
+    'Internet ýok. Baglanyşygy barlaň.',
+    'Нет подключения к интернету.',
+    'No internet connection.',
+  );
+  String get noInternetFirstCheck => _t(
+    'Ilkinji barlag üçin internet gerek.',
+    'Для первой проверки нужен интернет.',
+    'Internet connection is required for the first check.',
+  );
+
+  // ── Bron (Reservations) ────────────────────────────
+  String get reservations => _t('Bron', 'Бронь', 'Booking');
+  String get newReservation => _t('Täze bron', 'Новая бронь', 'New Booking');
+  String get editReservation =>
+      _t('Brony üýtget', 'Изменить бронь', 'Edit Booking');
+  String get reservationName => _t('Ady', 'Название', 'Title');
+  String get reservationNameHint =>
+      _t('Meselem: Serdar', 'Например: Иван', 'e.g. John');
+  String get reservationStartsAt => _t('Başlaýar', 'Начало', 'Starts');
+  String get reservationEndsAt => _t('Tamamlanýar', 'Конец', 'Ends');
+  String get reservationReminderInfo => _t(
+    '30 minut öňünden we başlanda duýduryş geler',
+    'Уведомление придёт за 30 минут и в момент начала',
+    'Notified 30 minutes before and at the start',
+  );
+  String addBookingOn(String date) =>
+      _t('$date üçin bron goş', 'Доб. бронь $date', 'Add booking on $date');
+  String get noReservationsForDay => _t(
+    'Bu gün üçin bron ýok',
+    'На этот день броней нет',
+    'No bookings for this day',
+  );
+  String get startTableNow => _t('BAŞLAT', 'ЗАПУСТИТЬ', 'START');
+  String reservationOverlapError(String tableName) => _t(
+    '$tableName şol wagt aralygynda eýýäm bronlanan.',
+    '$tableName уже забронирован на это время.',
+    '$tableName is already booked for that time.',
+  );
+  String get reservationEndBeforeStart => _t(
+    'Tamamlanýan wagt başlangyçdan soň bolmaly.',
+    'Время конца должно быть позже начала.',
+    'End time must be after the start time.',
+  );
+  String get reservationInPast => _t(
+    'Geçen wagt üçin bron edip bolmaýar.',
+    'Нельзя забронировать на прошедшее время.',
+    'You cannot book a time in the past.',
+  );
+  String get deleteReservation =>
+      _t('Brony poz', 'Удалить бронь', 'Delete Booking');
+  String reservationDeleteConfirm(String name) => _t(
+    '"$name" brony pozulsynmy?',
+    'Удалить бронь "$name"?',
+    'Delete booking "$name"?',
+  );
+  String get reservationStartedLabel =>
+      _t('Başladyldy', 'Запущено', 'Started');
+  String get reservationPendingLabel =>
+      _t('Garaşylýar', 'Ожидает', 'Pending');
+  String get selectTableFirst => _t(
+    'Ilki stol saýlaň',
+    'Сначала выберите стол',
+    'Select a table first',
+  );
+  String get selectTable =>
+      _t('Stol saýlaň', 'Выберите стол', 'Select table');
+  String get reservationTableStarted => _t(
+    'Stol başladyldy',
+    'Стол запущен',
+    'Table started',
+  );
+  String get reservationReminderSoonTitle =>
+      _t('Bron ýatlatmasy', 'Напоминание о брони', 'Booking reminder');
+  String reservationReminderSoonBody(String name, String table, String time) =>
+      _t(
+        '$name — $table, $time başlaýar (30 minut galdy)',
+        '$name — $table, начало в $time (осталось 30 минут)',
+        '$name — $table starts at $time (30 minutes left)',
+      );
+  String get reservationReminderNowTitle =>
+      _t('Bron wagty geldi', 'Время брони', 'Booking time');
+  String reservationReminderNowBody(String name, String table) => _t(
+    '$name — $table indi başlamaly',
+    '$name — $table, пора начинать',
+    '$name — $table is due to start now',
+  );
+
+  /// Aýyň gysga ady: 'AWG.' / 'АВГ.' / 'AUG'
+  String monthShort(int month) {
+    const tk = [
+      'ÝAN.', 'FEW.', 'MAR.', 'APR.', 'MAÝ', 'IÝN.',
+      'IÝL.', 'AWG.', 'SEN.', 'OKT.', 'NOÝ.', 'DEK.',
+    ];
+    const ru = [
+      'ЯНВ.', 'ФЕВР.', 'МАРТ', 'АПР.', 'МАЙ', 'ИЮНЬ',
+      'ИЮЛЬ', 'АВГ.', 'СЕНТ.', 'ОКТ.', 'НОЯБ.', 'ДЕК.',
+    ];
+    const en = [
+      'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
+      'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
+    ];
+    final i = (month - 1).clamp(0, 11);
+    return _t(tk[i], ru[i], en[i]);
+  }
+
+  /// Hepdäniň gününiň doly ady: 'çarşenbe' / 'среда' / 'Wednesday'
+  String weekdayFull(int weekday) {
+    const tk = [
+      'duşenbe', 'sişenbe', 'çarşenbe', 'penşenbe',
+      'anna', 'şenbe', 'ýekşenbe',
+    ];
+    const ru = [
+      'понедельник', 'вторник', 'среда', 'четверг',
+      'пятница', 'суббота', 'воскресенье',
+    ];
+    const en = [
+      'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+      'Friday', 'Saturday', 'Sunday',
+    ];
+    final i = (weekday - 1).clamp(0, 6);
+    return _t(tk[i], ru[i], en[i]);
+  }
+
+  /// Hepdäniň gününiň gysga ady: 'çar' / 'ср' / 'Wed'
+  String weekdayShort(int weekday) {
+    const tk = ['duş', 'siş', 'çar', 'pen', 'ann', 'şen', 'ýek'];
+    const ru = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+    const en = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final i = (weekday - 1).clamp(0, 6);
+    return _t(tk[i], ru[i], en[i]);
+  }
+
+  /// 'çar, 26 awg.' / 'ср, 26 авг.' / 'Wed, Aug 26'
+  String shortDateLabel(DateTime dt) {
+    final wd = weekdayShort(dt.weekday);
+    final mo = monthShort(dt.month);
+    return _lang == 'en' ? '$wd, $mo ${dt.day}' : '$wd, ${dt.day} ${mo.toLowerCase()}';
+  }
 
   // ── Session Tile ───────────────────────────────────
   // (reuse stop, already defined)

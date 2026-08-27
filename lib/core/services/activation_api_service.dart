@@ -8,6 +8,8 @@ class WrongCredentialsException implements Exception {}
 
 class DeviceNotRegisteredException implements Exception {}
 
+class NoInternetException implements Exception {}
+
 class ApiRequestException implements Exception {
   final String message;
   ApiRequestException(this.message);
@@ -77,14 +79,20 @@ class ActivationApiService {
       if (e.response?.statusCode == 404) {
         throw DeviceNotRegisteredException();
       }
+      if (_isConnectionError(e)) {
+        throw NoInternetException();
+      }
       throw ApiRequestException(_messageFor(e));
     }
   }
 
+  bool _isConnectionError(DioException e) =>
+      e.type == DioExceptionType.connectionTimeout ||
+      e.type == DioExceptionType.receiveTimeout ||
+      e.type == DioExceptionType.connectionError;
+
   String _messageFor(DioException e) {
-    if (e.type == DioExceptionType.connectionTimeout ||
-        e.type == DioExceptionType.receiveTimeout ||
-        e.type == DioExceptionType.connectionError) {
+    if (_isConnectionError(e)) {
       return 'Serwer bilen baglanyşyk ýok. Internedi barlaň.';
     }
     return 'Näbelli ýalňyşlyk ýüze çykdy.';

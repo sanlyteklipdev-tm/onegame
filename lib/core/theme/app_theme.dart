@@ -110,18 +110,14 @@ class AppTheme {
         elevation: 0,
         backgroundColor: scheme.surface,
         indicatorColor: scheme.primaryContainer,
+        // 6 bölüm bar — ýazgylar gysga we kesilmez ýaly
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) {
-            return TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: scheme.onSurface,
-            );
-          }
+          final selected = states.contains(WidgetState.selected);
           return TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-            color: scheme.onSurfaceVariant,
+            fontSize: 11,
+            fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+            color: selected ? scheme.onSurface : scheme.onSurfaceVariant,
+            overflow: TextOverflow.ellipsis,
           );
         }),
       ),

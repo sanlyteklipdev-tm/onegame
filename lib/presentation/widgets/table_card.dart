@@ -45,7 +45,7 @@ class TableCard extends ConsumerWidget {
               : null,
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -54,8 +54,8 @@ class TableCard extends ConsumerWidget {
                 children: [
                   // Ýagdaý ikonasy
                   Container(
-                    width: 36,
-                    height: 36,
+                    width: 32,
+                    height: 32,
                     decoration: BoxDecoration(
                       color: isActive
                           ? scheme.primary.withAlpha(38) // 0.15 * 255
@@ -124,7 +124,8 @@ class TableCard extends ConsumerWidget {
                       : scheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
-                maxLines: 2,
+                // Kart pesligi sebäpli bir setir — uzyn atlar gysgaldylýar
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
 

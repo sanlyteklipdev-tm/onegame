@@ -12,9 +12,16 @@ import '../../data/models/player_session_model.dart';
 import '../../data/models/table_model.dart';
 import '../../data/models/history_log_model.dart';
 import '../../data/models/customer_model.dart';
+import '../../data/models/employee_model.dart';
 import '../../data/repositories/table_repository.dart';
 import '../../data/repositories/session_repository.dart';
 import '../../data/repositories/customer_repository.dart';
+import '../../data/repositories/employee_repository.dart';
+import '../../data/data_source.dart';
+import '../../data/repositories/pg/pg_customer_repository.dart';
+import '../../data/repositories/pg/pg_employee_repository.dart';
+import '../../data/repositories/pg/pg_session_repository.dart';
+import '../../data/repositories/pg/pg_table_repository.dart';
 import '../../core/utils/formatters.dart';
 import '../../core/utils/price_calculator.dart';
 import '../../core/services/activation_api_service.dart';
@@ -24,15 +31,21 @@ import '../../core/services/activation_api_service.dart';
 // ════════════════════════════════════════════════════════════
 
 final tableRepositoryProvider = Provider<TableRepository>(
-  (ref) => IsarTableRepository(),
+  (ref) => DataSourceConfig.usePostgres
+      ? PgTableRepository()
+      : IsarTableRepository(),
 );
 
 final sessionRepositoryProvider = Provider<SessionRepository>(
-  (ref) => IsarSessionRepository(),
+  (ref) => DataSourceConfig.usePostgres
+      ? PgSessionRepository()
+      : IsarSessionRepository(),
 );
 
 final customerRepositoryProvider = Provider<CustomerRepository>(
-  (ref) => IsarCustomerRepository(),
+  (ref) => DataSourceConfig.usePostgres
+      ? PgCustomerRepository()
+      : IsarCustomerRepository(),
 );
 
 // ════════════════════════════════════════════════════════════
@@ -63,6 +76,41 @@ class CustomerNotifier extends AsyncNotifier<void> {
 
 final customerNotifierProvider = AsyncNotifierProvider<CustomerNotifier, void>(
   CustomerNotifier.new,
+);
+
+// ════════════════════════════════════════════════════════════
+//  EMPLOYEE PROVIDERS (Işgärler)
+// ════════════════════════════════════════════════════════════
+
+final employeeRepositoryProvider = Provider<EmployeeRepository>(
+  (ref) => DataSourceConfig.usePostgres
+      ? PgEmployeeRepository()
+      : IsarEmployeeRepository(),
+);
+
+final employeesStreamProvider = StreamProvider<List<EmployeeModel>>((ref) {
+  return ref.watch(employeeRepositoryProvider).watchAll();
+});
+
+class EmployeeNotifier extends AsyncNotifier<void> {
+  EmployeeRepository get _repo => ref.read(employeeRepositoryProvider);
+
+  @override
+  Future<void> build() async {}
+
+  Future<void> saveEmployee(EmployeeModel employee) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _repo.save(employee).then((_) {}));
+  }
+
+  Future<void> deleteEmployee(int id) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _repo.delete(id));
+  }
+}
+
+final employeeNotifierProvider = AsyncNotifierProvider<EmployeeNotifier, void>(
+  EmployeeNotifier.new,
 );
 
 // ════════════════════════════════════════════════════════════
