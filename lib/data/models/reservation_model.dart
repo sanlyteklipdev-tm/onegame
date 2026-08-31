@@ -30,6 +30,10 @@ class ReservationModel {
   /// Jogapkär işgär (EmployeeModel). Saýlanmadyk bolsa null.
   int? employeeId;
 
+  /// Saýlanan hyzmat (ServiceModel). Täze bronlarda hökman,
+  /// köne ýazgylarda boş bolup biler.
+  int? serviceId;
+
   /// Bron başlaýan wagt
   @Index()
   late DateTime startTime;
@@ -42,6 +46,9 @@ class ReservationModel {
 
   late DateTime createdAt;
 
+  /// Haýsy enjamdan goşuldy. Köne ýazgylarda boş.
+  String? deviceName;
+
   ReservationModel();
 
   factory ReservationModel.create({
@@ -51,12 +58,14 @@ class ReservationModel {
     required DateTime endTime,
     int? customerId,
     int? employeeId,
+    int? serviceId,
   }) =>
       ReservationModel()
         ..tableId = tableId
         ..title = title.trim()
         ..customerId = customerId
         ..employeeId = employeeId
+        ..serviceId = serviceId
         ..startTime = startTime
         ..endTime = endTime
         ..status = ReservationStatus.pending

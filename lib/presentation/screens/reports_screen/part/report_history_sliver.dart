@@ -12,7 +12,7 @@ class ReportHistorySliver extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final historyAsync = ref.watch(filteredHistoryProvider);
+    final historyAsync = ref.watch(deviceFilteredHistoryProvider);
     final scheme = Theme.of(context).colorScheme;
     final s = S.of(context);
 

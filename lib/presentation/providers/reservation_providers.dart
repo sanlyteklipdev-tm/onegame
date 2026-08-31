@@ -1,11 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
 
 import '../../core/utils/formatters.dart';
-import '../../data/local/isar_service.dart';
 import '../../data/models/reservation_model.dart';
 import '../../data/models/table_model.dart';
 import '../../data/data_source.dart';
+import 'providers.dart';
 import '../../data/repositories/pg/pg_reservation_repository.dart';
 import '../../data/repositories/reservation_repository.dart';
 
@@ -94,7 +93,9 @@ class ReservationNotifier extends AsyncNotifier<void> {
     );
 
     if (clash != null) {
-      final table = await IsarService.isar.tableModels.get(clash.tableId);
+      final table = await ref
+          .read(tableRepositoryProvider)
+          .getTableById(clash.tableId);
       throw ReservationOverlapException(table?.name ?? '');
     }
 
@@ -110,16 +111,10 @@ final reservationNotifierProvider =
     AsyncNotifierProvider<ReservationNotifier, void>(ReservationNotifier.new);
 
 /// Bronda görkezmek üçin stol atlary: {tableId: at}
+/// Stollar repository arkaly alynýar — çeşme Isar ýa-da Postgres bolup biler.
 final tableNamesProvider = Provider<Map<int, String>>((ref) {
   final tables = ref
-      .watch(_allTablesProvider)
+      .watch(tablesStreamProvider)
       .maybeWhen(data: (t) => t, orElse: () => <TableModel>[]);
   return {for (final t in tables) t.id: t.name};
-});
-
-final _allTablesProvider = StreamProvider<List<TableModel>>((ref) {
-  return IsarService.isar.tableModels
-      .where()
-      .sortByCreatedAt()
-      .watch(fireImmediately: true);
 });

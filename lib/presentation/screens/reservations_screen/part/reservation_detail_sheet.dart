@@ -7,6 +7,7 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../data/models/reservation_model.dart';
 import '../../../providers/providers.dart';
 import '../../../providers/reservation_providers.dart';
+import '../../../widgets/device_chip.dart';
 import 'reservation_block.dart';
 import 'reservation_detail_actions.dart';
 import 'reservation_form_sheet.dart';
@@ -81,6 +82,10 @@ class ReservationDetailSheet extends ConsumerWidget {
             '${AppFormatters.formatTime(reservation.endTime)}',
             style: Theme.of(context).textTheme.titleMedium,
           ),
+          if (reservation.deviceName != null) ...[
+            const SizedBox(height: 6),
+            DeviceChip(deviceName: reservation.deviceName),
+          ],
           if (employeeName != null) ...[
             const SizedBox(height: 8),
             Row(

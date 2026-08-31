@@ -8,6 +8,7 @@ import 'dart:io';
 import 'core/theme/app_theme.dart';
 import 'core/l10n/app_localizations.dart';
 import 'core/l10n/tk_delegates.dart';
+import 'core/services/device_name_service.dart';
 import 'core/services/notification_service.dart';
 import 'data/local/isar_service.dart';
 import 'data/models/app_settings_model.dart';
@@ -28,6 +29,8 @@ void main() async {
 
   await IsarService.initialize();
   await NotificationService().initialize();
+  // Ýazgylara enjamyň ady goýulýar — repositoryler sinhron okaýar
+  await DeviceNameService.load();
 
   ThemeMode initialTheme = ThemeMode.system;
   AppLanguage initialLang = AppLanguage.system;

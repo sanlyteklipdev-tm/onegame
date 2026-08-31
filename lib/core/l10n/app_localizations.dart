@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../data/models/employee_model.dart';
+
 /// Goldanýan diller
 enum AppLanguage { system, tk, ru, en }
 
@@ -110,14 +112,97 @@ class S {
   );
   String get employeeName =>
       _t('Işgäriň ady', 'Имя сотрудника', 'Staff Name');
-  String get employeeCategory =>
+  String get employeePosition => _t('Wezipe', 'Должность', 'Position');
+  String get customerCategory =>
       _t('Kategoriýa', 'Категория', 'Category');
+
+  /// Işgäriň wezipesiniň ady
+  String positionLabel(EmployeePosition p) => switch (p) {
+    EmployeePosition.manager => _t('Menejer', 'Менеджер', 'Manager'),
+    EmployeePosition.cashier => _t('Kassir', 'Кассир', 'Cashier'),
+    EmployeePosition.operator => _t('Operator', 'Оператор', 'Operator'),
+    EmployeePosition.director => _t('Direktor', 'Директор', 'Director'),
+  };
   String get noEmployee => _t('Işgärsiz', 'Без сотрудника', 'No staff');
+
+  String get employeeType => _t('Görnüş', 'Тип', 'Type');
+
+  /// Işgäriň görnüşiniň ady
+  String typeLabel(EmployeeType t) => switch (t) {
+    EmployeeType.type1 => _t('1-nji görnüş', 'Тип 1', 'Type 1'),
+    EmployeeType.type2 => _t('2-nji görnüş', 'Тип 2', 'Type 2'),
+  };
+
+  /// Bronda saýlar ýaly 2-nji görnüşdäki işgär ýok
+  String get noType2Employees => _t(
+    '2-nji görnüşdäki işgär ýok',
+    'Нет сотрудников типа 2',
+    'No Type 2 staff',
+  );
+
+  // ── Maglumat bazasy ────────────────────────────────
+  String get database => _t('Maglumat bazasy', 'База данных', 'Database');
+  String get dbCurrentSource =>
+      _t('Häzirki çeşme', 'Текущий источник', 'Current source');
+  String get dbLocalIsar =>
+      _t('Isar (enjamyň özünde)', 'Isar (на устройстве)', 'Isar (on device)');
+  String get dbPostgres => 'PostgreSQL';
+  String get dbConnected => _t('Birikdirildi', 'Подключено', 'Connected');
+  String get dbNotConnected =>
+      _t('Birikme ýok', 'Нет подключения', 'Not connected');
+  String get dbCheckConnection =>
+      _t('Birikmäni barla', 'Проверить подключение', 'Check connection');
+
+  // ── Enjamlar ───────────────────────────────────────
+  String get device => _t('Enjam', 'Устройство', 'Device');
+  String get thisDeviceName =>
+      _t('Bu enjamyň ady', 'Имя этого устройства', 'This device name');
+  String get deviceNameHint =>
+      _t('Meselem: Kassa', 'Например: Касса', 'e.g. Front desk');
+  String get deviceNameSaved =>
+      _t('Enjamyň ady ýatda saklandy', 'Имя устройства сохранено', 'Device name saved');
+  String get deviceNameExplain => _t(
+    'Şu enjamdan goşulan ýazgylarda bu at görkeziler.',
+    'Это имя будет показано у записей, добавленных с этого устройства.',
+    'This name is shown on records added from this device.',
+  );
+  String get allDevices => _t('Ähli enjamlar', 'Все устройства', 'All devices');
+  String get unknownDevice => _t('Näbelli', 'Неизвестно', 'Unknown');
 
   // ── Umumy meýdanlar ────────────────────────────────
   String get phone => _t('Telefon', 'Телефон', 'Phone');
   String get phoneOptional =>
       _t('Hökman däl', 'Необязательно', 'Optional');
+
+  // ── Hyzmatlar (Services) ───────────────────────────
+  String get services => _t('Hyzmat', 'Услуги', 'Services');
+  String get addService => _t('Hyzmat goş', 'Добавить услугу', 'Add Service');
+  String get editService =>
+      _t('Hyzmaty üýtget', 'Изменить услугу', 'Edit Service');
+  String get deleteService =>
+      _t('Hyzmaty poz', 'Удалить услугу', 'Delete Service');
+  String deleteServiceConfirm(String name) => _t(
+    '"$name" pozulyp bilinmez. Dowam etmelimi?',
+    'Услуга "$name" будет удалена. Продолжить?',
+    'Service "$name" will be deleted. Continue?',
+  );
+  String get noServices => _t('Hyzmat ýok', 'Услуг нет', 'No Services');
+  String get noServicesHint => _t(
+    'Hyzmat goşmak üçin + düwmä basyň',
+    'Нажмите + чтобы добавить услугу',
+    'Tap + to add a service',
+  );
+  String get serviceName => _t('Hyzmatyň ady', 'Название услуги', 'Service Name');
+  String get serviceNameHint =>
+      _t('Meselem: Klassiki massaž', 'Например: Классический массаж', 'e.g. Classic massage');
+  String get servicePrice => _t('Baha (TMT)', 'Цена (TMT)', 'Price (TMT)');
+  String get selectService =>
+      _t('Hyzmat saýlaň', 'Выберите услугу', 'Select service');
+  String get selectServiceFirst => _t(
+    'Hyzmat saýlaň',
+    'Выберите услугу',
+    'Select a service',
+  );
 
   // ── Tables Screen ─────────────────────────────────
   String get appTitle => 'Sanly Timer';

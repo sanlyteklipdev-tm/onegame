@@ -22,38 +22,43 @@ const TableModelSchema = CollectionSchema(
       name: r'createdAt',
       type: IsarType.dateTime,
     ),
-    r'isActive': PropertySchema(
+    r'deviceName': PropertySchema(
       id: 1,
+      name: r'deviceName',
+      type: IsarType.string,
+    ),
+    r'isActive': PropertySchema(
+      id: 2,
       name: r'isActive',
       type: IsarType.bool,
     ),
     r'isAvailable': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'isAvailable',
       type: IsarType.bool,
     ),
     r'maxUsers': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'maxUsers',
       type: IsarType.long,
     ),
     r'name': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'name',
       type: IsarType.string,
     ),
     r'pricePerHour': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'pricePerHour',
       type: IsarType.double,
     ),
     r'pricePerMinute': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'pricePerMinute',
       type: IsarType.double,
     ),
     r'status': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'status',
       type: IsarType.byte,
       enumMap: _TableModelstatusEnumValueMap,
@@ -93,6 +98,12 @@ int _tableModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.deviceName;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
@@ -104,13 +115,14 @@ void _tableModelSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.createdAt);
-  writer.writeBool(offsets[1], object.isActive);
-  writer.writeBool(offsets[2], object.isAvailable);
-  writer.writeLong(offsets[3], object.maxUsers);
-  writer.writeString(offsets[4], object.name);
-  writer.writeDouble(offsets[5], object.pricePerHour);
-  writer.writeDouble(offsets[6], object.pricePerMinute);
-  writer.writeByte(offsets[7], object.status.index);
+  writer.writeString(offsets[1], object.deviceName);
+  writer.writeBool(offsets[2], object.isActive);
+  writer.writeBool(offsets[3], object.isAvailable);
+  writer.writeLong(offsets[4], object.maxUsers);
+  writer.writeString(offsets[5], object.name);
+  writer.writeDouble(offsets[6], object.pricePerHour);
+  writer.writeDouble(offsets[7], object.pricePerMinute);
+  writer.writeByte(offsets[8], object.status.index);
 }
 
 TableModel _tableModelDeserialize(
@@ -121,12 +133,13 @@ TableModel _tableModelDeserialize(
 ) {
   final object = TableModel();
   object.createdAt = reader.readDateTime(offsets[0]);
+  object.deviceName = reader.readStringOrNull(offsets[1]);
   object.id = id;
-  object.maxUsers = reader.readLongOrNull(offsets[3]);
-  object.name = reader.readString(offsets[4]);
-  object.pricePerHour = reader.readDouble(offsets[5]);
+  object.maxUsers = reader.readLongOrNull(offsets[4]);
+  object.name = reader.readString(offsets[5]);
+  object.pricePerHour = reader.readDouble(offsets[6]);
   object.status =
-      _TableModelstatusValueEnumMap[reader.readByteOrNull(offsets[7])] ??
+      _TableModelstatusValueEnumMap[reader.readByteOrNull(offsets[8])] ??
           TableStatus.available;
   return object;
 }
@@ -141,18 +154,20 @@ P _tableModelDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readBool(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
       return (reader.readBool(offset)) as P;
     case 3:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 5:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 6:
       return (reader.readDouble(offset)) as P;
     case 7:
+      return (reader.readDouble(offset)) as P;
+    case 8:
       return (_TableModelstatusValueEnumMap[reader.readByteOrNull(offset)] ??
           TableStatus.available) as P;
     default:
@@ -409,6 +424,159 @@ extension TableModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterFilterCondition>
+      deviceNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'deviceName',
+      ));
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterFilterCondition>
+      deviceNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'deviceName',
+      ));
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterFilterCondition> deviceNameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterFilterCondition>
+      deviceNameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterFilterCondition>
+      deviceNameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterFilterCondition> deviceNameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'deviceName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterFilterCondition>
+      deviceNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterFilterCondition>
+      deviceNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterFilterCondition>
+      deviceNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterFilterCondition> deviceNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'deviceName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterFilterCondition>
+      deviceNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'deviceName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterFilterCondition>
+      deviceNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'deviceName',
+        value: '',
       ));
     });
   }
@@ -893,6 +1061,18 @@ extension TableModelQuerySortBy
     });
   }
 
+  QueryBuilder<TableModel, TableModel, QAfterSortBy> sortByDeviceName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterSortBy> sortByDeviceNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.desc);
+    });
+  }
+
   QueryBuilder<TableModel, TableModel, QAfterSortBy> sortByIsActive() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isActive', Sort.asc);
@@ -990,6 +1170,18 @@ extension TableModelQuerySortThenBy
   QueryBuilder<TableModel, TableModel, QAfterSortBy> thenByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterSortBy> thenByDeviceName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TableModel, TableModel, QAfterSortBy> thenByDeviceNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.desc);
     });
   }
 
@@ -1099,6 +1291,13 @@ extension TableModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<TableModel, TableModel, QDistinct> distinctByDeviceName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'deviceName', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<TableModel, TableModel, QDistinct> distinctByIsActive() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isActive');
@@ -1154,6 +1353,12 @@ extension TableModelQueryProperty
   QueryBuilder<TableModel, DateTime, QQueryOperations> createdAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdAt');
+    });
+  }
+
+  QueryBuilder<TableModel, String?, QQueryOperations> deviceNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'deviceName');
     });
   }
 

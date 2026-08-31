@@ -28,64 +28,69 @@ const PlayerSessionModelSchema = CollectionSchema(
       name: r'customerId',
       type: IsarType.long,
     ),
-    r'discountPercentage': PropertySchema(
+    r'deviceName': PropertySchema(
       id: 2,
+      name: r'deviceName',
+      type: IsarType.string,
+    ),
+    r'discountPercentage': PropertySchema(
+      id: 3,
       name: r'discountPercentage',
       type: IsarType.double,
     ),
     r'endTime': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'endTime',
       type: IsarType.dateTime,
     ),
     r'isActive': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'isActive',
       type: IsarType.bool,
     ),
     r'isFinished': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'isFinished',
       type: IsarType.bool,
     ),
     r'lastCheckpointTime': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'lastCheckpointTime',
       type: IsarType.dateTime,
     ),
     r'playerName': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'playerName',
       type: IsarType.string,
     ),
     r'reminderMinutes': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'reminderMinutes',
       type: IsarType.long,
     ),
     r'sessionCode': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'sessionCode',
       type: IsarType.string,
     ),
     r'startTime': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'startTime',
       type: IsarType.dateTime,
     ),
     r'status': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'status',
       type: IsarType.byte,
       enumMap: _PlayerSessionModelstatusEnumValueMap,
     ),
     r'tableId': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'tableId',
       type: IsarType.long,
     ),
     r'totalPrice': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'totalPrice',
       type: IsarType.double,
     )
@@ -137,6 +142,12 @@ int _playerSessionModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.deviceName;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.playerName.length * 3;
   bytesCount += 3 + object.sessionCode.length * 3;
   return bytesCount;
@@ -150,18 +161,19 @@ void _playerSessionModelSerialize(
 ) {
   writer.writeDouble(offsets[0], object.accumulatedCost);
   writer.writeLong(offsets[1], object.customerId);
-  writer.writeDouble(offsets[2], object.discountPercentage);
-  writer.writeDateTime(offsets[3], object.endTime);
-  writer.writeBool(offsets[4], object.isActive);
-  writer.writeBool(offsets[5], object.isFinished);
-  writer.writeDateTime(offsets[6], object.lastCheckpointTime);
-  writer.writeString(offsets[7], object.playerName);
-  writer.writeLong(offsets[8], object.reminderMinutes);
-  writer.writeString(offsets[9], object.sessionCode);
-  writer.writeDateTime(offsets[10], object.startTime);
-  writer.writeByte(offsets[11], object.status.index);
-  writer.writeLong(offsets[12], object.tableId);
-  writer.writeDouble(offsets[13], object.totalPrice);
+  writer.writeString(offsets[2], object.deviceName);
+  writer.writeDouble(offsets[3], object.discountPercentage);
+  writer.writeDateTime(offsets[4], object.endTime);
+  writer.writeBool(offsets[5], object.isActive);
+  writer.writeBool(offsets[6], object.isFinished);
+  writer.writeDateTime(offsets[7], object.lastCheckpointTime);
+  writer.writeString(offsets[8], object.playerName);
+  writer.writeLong(offsets[9], object.reminderMinutes);
+  writer.writeString(offsets[10], object.sessionCode);
+  writer.writeDateTime(offsets[11], object.startTime);
+  writer.writeByte(offsets[12], object.status.index);
+  writer.writeLong(offsets[13], object.tableId);
+  writer.writeDouble(offsets[14], object.totalPrice);
 }
 
 PlayerSessionModel _playerSessionModelDeserialize(
@@ -173,19 +185,20 @@ PlayerSessionModel _playerSessionModelDeserialize(
   final object = PlayerSessionModel();
   object.accumulatedCost = reader.readDouble(offsets[0]);
   object.customerId = reader.readLongOrNull(offsets[1]);
-  object.discountPercentage = reader.readDouble(offsets[2]);
-  object.endTime = reader.readDateTimeOrNull(offsets[3]);
+  object.deviceName = reader.readStringOrNull(offsets[2]);
+  object.discountPercentage = reader.readDouble(offsets[3]);
+  object.endTime = reader.readDateTimeOrNull(offsets[4]);
   object.id = id;
-  object.lastCheckpointTime = reader.readDateTime(offsets[6]);
-  object.playerName = reader.readString(offsets[7]);
-  object.reminderMinutes = reader.readLongOrNull(offsets[8]);
-  object.sessionCode = reader.readString(offsets[9]);
-  object.startTime = reader.readDateTime(offsets[10]);
+  object.lastCheckpointTime = reader.readDateTime(offsets[7]);
+  object.playerName = reader.readString(offsets[8]);
+  object.reminderMinutes = reader.readLongOrNull(offsets[9]);
+  object.sessionCode = reader.readString(offsets[10]);
+  object.startTime = reader.readDateTime(offsets[11]);
   object.status = _PlayerSessionModelstatusValueEnumMap[
-          reader.readByteOrNull(offsets[11])] ??
+          reader.readByteOrNull(offsets[12])] ??
       SessionStatus.active;
-  object.tableId = reader.readLong(offsets[12]);
-  object.totalPrice = reader.readDouble(offsets[13]);
+  object.tableId = reader.readLong(offsets[13]);
+  object.totalPrice = reader.readDouble(offsets[14]);
   return object;
 }
 
@@ -201,30 +214,32 @@ P _playerSessionModelDeserializeProp<P>(
     case 1:
       return (reader.readLongOrNull(offset)) as P;
     case 2:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 4:
-      return (reader.readBool(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 5:
       return (reader.readBool(offset)) as P;
     case 6:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 7:
-      return (reader.readString(offset)) as P;
-    case 8:
-      return (reader.readLongOrNull(offset)) as P;
-    case 9:
-      return (reader.readString(offset)) as P;
-    case 10:
       return (reader.readDateTime(offset)) as P;
+    case 8:
+      return (reader.readString(offset)) as P;
+    case 9:
+      return (reader.readLongOrNull(offset)) as P;
+    case 10:
+      return (reader.readString(offset)) as P;
     case 11:
+      return (reader.readDateTime(offset)) as P;
+    case 12:
       return (_PlayerSessionModelstatusValueEnumMap[
               reader.readByteOrNull(offset)] ??
           SessionStatus.active) as P;
-    case 12:
-      return (reader.readLong(offset)) as P;
     case 13:
+      return (reader.readLong(offset)) as P;
+    case 14:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -676,6 +691,160 @@ extension PlayerSessionModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterFilterCondition>
+      deviceNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'deviceName',
+      ));
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterFilterCondition>
+      deviceNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'deviceName',
+      ));
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterFilterCondition>
+      deviceNameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterFilterCondition>
+      deviceNameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterFilterCondition>
+      deviceNameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterFilterCondition>
+      deviceNameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'deviceName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterFilterCondition>
+      deviceNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterFilterCondition>
+      deviceNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterFilterCondition>
+      deviceNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterFilterCondition>
+      deviceNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'deviceName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterFilterCondition>
+      deviceNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'deviceName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterFilterCondition>
+      deviceNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'deviceName',
+        value: '',
       ));
     });
   }
@@ -1570,6 +1739,20 @@ extension PlayerSessionModelQuerySortBy
   }
 
   QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterSortBy>
+      sortByDeviceName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterSortBy>
+      sortByDeviceNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterSortBy>
       sortByDiscountPercentage() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'discountPercentage', Sort.asc);
@@ -1765,6 +1948,20 @@ extension PlayerSessionModelQuerySortThenBy
       thenByCustomerIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'customerId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterSortBy>
+      thenByDeviceName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QAfterSortBy>
+      thenByDeviceNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.desc);
     });
   }
 
@@ -1968,6 +2165,13 @@ extension PlayerSessionModelQueryWhereDistinct
   }
 
   QueryBuilder<PlayerSessionModel, PlayerSessionModel, QDistinct>
+      distinctByDeviceName({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'deviceName', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, PlayerSessionModel, QDistinct>
       distinctByDiscountPercentage() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'discountPercentage');
@@ -2071,6 +2275,13 @@ extension PlayerSessionModelQueryProperty
       customerIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'customerId');
+    });
+  }
+
+  QueryBuilder<PlayerSessionModel, String?, QQueryOperations>
+      deviceNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'deviceName');
     });
   }
 

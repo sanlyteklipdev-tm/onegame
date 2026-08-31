@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../data/models/history_log_model.dart';
+import '../../../widgets/device_chip.dart';
 
 class ReportLogTile extends StatelessWidget {
   final HistoryLogModel log;
@@ -56,6 +57,7 @@ class ReportLogTile extends StatelessWidget {
                   '${log.sessionCode}  ·  ${AppFormatters.formatDateTime(log.startTime)}  →  ${AppFormatters.formatTime(log.endTime)}',
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
+                DeviceChip(deviceName: log.deviceName, dense: true),
               ],
             ),
           ),

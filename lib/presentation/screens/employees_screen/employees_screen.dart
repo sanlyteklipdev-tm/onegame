@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/app_localizations.dart';
+import '../../../data/models/employee_model.dart';
 import '../../providers/providers.dart';
 import 'part/employee_form_sheet.dart';
-import 'part/employee_tile.dart';
+import '../../widgets/entity_card.dart';
+import '../../widgets/entity_grid.dart';
 
 class EmployeesScreen extends ConsumerStatefulWidget {
   const EmployeesScreen({super.key});
@@ -30,6 +32,37 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
       isScrollControlled: true,
       useSafeArea: true,
       builder: (_) => const EmployeeFormSheet(),
+    );
+  }
+
+  void _confirmDelete(EmployeeModel item) {
+    final s = S.of(context);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(s.deleteEmployee),
+        content: Text(s.deleteEmployeeConfirm(item.name)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(s.cancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              minimumSize: Size.zero,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            ),
+            onPressed: () {
+              ref
+                  .read(employeeNotifierProvider.notifier)
+                  .deleteEmployee(item.id);
+              Navigator.pop(ctx);
+            },
+            child: Text(s.delete),
+          ),
+        ],
+      ),
     );
   }
 
@@ -107,11 +140,28 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
             );
           }
 
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
+          return EntityGrid(
             itemCount: filtered.length,
-            separatorBuilder: (ctx, i) => const SizedBox(height: 8),
-            itemBuilder: (context, i) => EmployeeTile(employee: filtered[i]),
+            itemBuilder: (context, i) {
+              final e = filtered[i];
+              return EntityCard(
+                name: e.name,
+                icon: CupertinoIcons.briefcase,
+                badge: s.positionLabel(e.position),
+                subtitle: [
+                  s.typeLabel(e.type),
+                  if (e.phone != null && e.phone!.isNotEmpty) e.phone!,
+                ].join('  ·  '),
+                deviceName: e.deviceName,
+                onEdit: () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  builder: (_) => EmployeeFormSheet(existing: e),
+                ),
+                onDelete: () => _confirmDelete(e),
+              );
+            },
           );
         },
       ),

@@ -1,3 +1,4 @@
+import '../../../core/services/device_name_service.dart';
 import '../../models/table_model.dart';
 import '../../remote/pg_stream.dart';
 import '../../remote/postgres_service.dart';
@@ -5,7 +6,7 @@ import '../table_repository.dart';
 
 const _select = '''
 SELECT id, name, price_per_hour::float8 AS price_per_hour,
-       max_users, status, created_at
+       max_users, status, created_at, device_name
 FROM game_tables
 ''';
 
@@ -21,7 +22,8 @@ TableModel _map(Map<String, dynamic> row) => TableModel()
   ..pricePerHour = (row['price_per_hour'] as num).toDouble()
   ..maxUsers = row['max_users'] as int?
   ..status = _statusFromDb(row['status'] as String)
-  ..createdAt = (row['created_at'] as DateTime).toLocal();
+  ..createdAt = (row['created_at'] as DateTime).toLocal()
+  ..deviceName = row['device_name'] as String?;
 
 class PgTableRepository implements TableRepository {
   @override
@@ -47,8 +49,8 @@ class PgTableRepository implements TableRepository {
   Future<TableModel> createTable(TableModel table) async {
     final res = await PostgresService.query(
       '''
-      INSERT INTO game_tables (name, price_per_hour, max_users, status)
-      VALUES (@name, @price, @maxUsers, @status)
+      INSERT INTO game_tables (name, price_per_hour, max_users, status, device_name)
+      VALUES (@name, @price, @maxUsers, @status, @device)
       RETURNING id
       ''',
       parameters: {
@@ -56,6 +58,7 @@ class PgTableRepository implements TableRepository {
         'price': table.pricePerHour,
         'maxUsers': table.maxUsers,
         'status': _statusToDb(table.status),
+        'device': DeviceNameService.current,
       },
     );
     table.id = res.first.toColumnMap()['id'] as int;

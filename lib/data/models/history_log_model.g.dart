@@ -22,53 +22,58 @@ const HistoryLogModelSchema = CollectionSchema(
       name: r'createdAt',
       type: IsarType.dateTime,
     ),
-    r'discountAmount': PropertySchema(
+    r'deviceName': PropertySchema(
       id: 1,
+      name: r'deviceName',
+      type: IsarType.string,
+    ),
+    r'discountAmount': PropertySchema(
+      id: 2,
       name: r'discountAmount',
       type: IsarType.double,
     ),
     r'discountPercentage': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'discountPercentage',
       type: IsarType.double,
     ),
     r'endTime': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'endTime',
       type: IsarType.dateTime,
     ),
     r'playerName': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'playerName',
       type: IsarType.string,
     ),
     r'sessionCode': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'sessionCode',
       type: IsarType.string,
     ),
     r'sessionId': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'sessionId',
       type: IsarType.long,
     ),
     r'startTime': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'startTime',
       type: IsarType.dateTime,
     ),
     r'tableId': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'tableId',
       type: IsarType.long,
     ),
     r'tableName': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'tableName',
       type: IsarType.string,
     ),
     r'totalPrice': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'totalPrice',
       type: IsarType.double,
     )
@@ -133,6 +138,12 @@ int _historyLogModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.deviceName;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.playerName.length * 3;
   bytesCount += 3 + object.sessionCode.length * 3;
   bytesCount += 3 + object.tableName.length * 3;
@@ -146,16 +157,17 @@ void _historyLogModelSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.createdAt);
-  writer.writeDouble(offsets[1], object.discountAmount);
-  writer.writeDouble(offsets[2], object.discountPercentage);
-  writer.writeDateTime(offsets[3], object.endTime);
-  writer.writeString(offsets[4], object.playerName);
-  writer.writeString(offsets[5], object.sessionCode);
-  writer.writeLong(offsets[6], object.sessionId);
-  writer.writeDateTime(offsets[7], object.startTime);
-  writer.writeLong(offsets[8], object.tableId);
-  writer.writeString(offsets[9], object.tableName);
-  writer.writeDouble(offsets[10], object.totalPrice);
+  writer.writeString(offsets[1], object.deviceName);
+  writer.writeDouble(offsets[2], object.discountAmount);
+  writer.writeDouble(offsets[3], object.discountPercentage);
+  writer.writeDateTime(offsets[4], object.endTime);
+  writer.writeString(offsets[5], object.playerName);
+  writer.writeString(offsets[6], object.sessionCode);
+  writer.writeLong(offsets[7], object.sessionId);
+  writer.writeDateTime(offsets[8], object.startTime);
+  writer.writeLong(offsets[9], object.tableId);
+  writer.writeString(offsets[10], object.tableName);
+  writer.writeDouble(offsets[11], object.totalPrice);
 }
 
 HistoryLogModel _historyLogModelDeserialize(
@@ -166,17 +178,18 @@ HistoryLogModel _historyLogModelDeserialize(
 ) {
   final object = HistoryLogModel();
   object.createdAt = reader.readDateTime(offsets[0]);
-  object.discountAmount = reader.readDoubleOrNull(offsets[1]);
-  object.discountPercentage = reader.readDoubleOrNull(offsets[2]);
-  object.endTime = reader.readDateTime(offsets[3]);
+  object.deviceName = reader.readStringOrNull(offsets[1]);
+  object.discountAmount = reader.readDoubleOrNull(offsets[2]);
+  object.discountPercentage = reader.readDoubleOrNull(offsets[3]);
+  object.endTime = reader.readDateTime(offsets[4]);
   object.id = id;
-  object.playerName = reader.readString(offsets[4]);
-  object.sessionCode = reader.readString(offsets[5]);
-  object.sessionId = reader.readLong(offsets[6]);
-  object.startTime = reader.readDateTime(offsets[7]);
-  object.tableId = reader.readLong(offsets[8]);
-  object.tableName = reader.readString(offsets[9]);
-  object.totalPrice = reader.readDouble(offsets[10]);
+  object.playerName = reader.readString(offsets[5]);
+  object.sessionCode = reader.readString(offsets[6]);
+  object.sessionId = reader.readLong(offsets[7]);
+  object.startTime = reader.readDateTime(offsets[8]);
+  object.tableId = reader.readLong(offsets[9]);
+  object.tableName = reader.readString(offsets[10]);
+  object.totalPrice = reader.readDouble(offsets[11]);
   return object;
 }
 
@@ -190,24 +203,26 @@ P _historyLogModelDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
       return (reader.readDoubleOrNull(offset)) as P;
     case 3:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
-      return (reader.readLong(offset)) as P;
-    case 7:
-      return (reader.readDateTime(offset)) as P;
-    case 8:
-      return (reader.readLong(offset)) as P;
-    case 9:
       return (reader.readString(offset)) as P;
+    case 7:
+      return (reader.readLong(offset)) as P;
+    case 8:
+      return (reader.readDateTime(offset)) as P;
+    case 9:
+      return (reader.readLong(offset)) as P;
     case 10:
+      return (reader.readString(offset)) as P;
+    case 11:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -664,6 +679,160 @@ extension HistoryLogModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterFilterCondition>
+      deviceNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'deviceName',
+      ));
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterFilterCondition>
+      deviceNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'deviceName',
+      ));
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterFilterCondition>
+      deviceNameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterFilterCondition>
+      deviceNameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterFilterCondition>
+      deviceNameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterFilterCondition>
+      deviceNameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'deviceName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterFilterCondition>
+      deviceNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterFilterCondition>
+      deviceNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterFilterCondition>
+      deviceNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterFilterCondition>
+      deviceNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'deviceName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterFilterCondition>
+      deviceNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'deviceName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterFilterCondition>
+      deviceNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'deviceName',
+        value: '',
       ));
     });
   }
@@ -1614,6 +1783,20 @@ extension HistoryLogModelQuerySortBy
   }
 
   QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterSortBy>
+      sortByDeviceName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterSortBy>
+      sortByDeviceNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterSortBy>
       sortByDiscountAmount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'discountAmount', Sort.asc);
@@ -1765,6 +1948,20 @@ extension HistoryLogModelQuerySortThenBy
       thenByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterSortBy>
+      thenByDeviceName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QAfterSortBy>
+      thenByDeviceNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.desc);
     });
   }
 
@@ -1929,6 +2126,13 @@ extension HistoryLogModelQueryWhereDistinct
   }
 
   QueryBuilder<HistoryLogModel, HistoryLogModel, QDistinct>
+      distinctByDeviceName({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'deviceName', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, HistoryLogModel, QDistinct>
       distinctByDiscountAmount() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'discountAmount');
@@ -2011,6 +2215,13 @@ extension HistoryLogModelQueryProperty
       createdAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdAt');
+    });
+  }
+
+  QueryBuilder<HistoryLogModel, String?, QQueryOperations>
+      deviceNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'deviceName');
     });
   }
 

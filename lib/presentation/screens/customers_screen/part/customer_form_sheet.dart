@@ -20,6 +20,7 @@ class _CustomerFormSheetState extends ConsumerState<CustomerFormSheet> {
   late final TextEditingController _nameCtrl;
   late final TextEditingController _discountCtrl;
   late final TextEditingController _phoneCtrl;
+  late CustomerCategory _category;
   bool _isLoading = false;
 
   @override
@@ -27,8 +28,10 @@ class _CustomerFormSheetState extends ConsumerState<CustomerFormSheet> {
     super.initState();
     _nameCtrl = TextEditingController(text: widget.existing?.name ?? '');
     _discountCtrl = TextEditingController(
-        text: widget.existing?.discountPercentage.toStringAsFixed(0) ?? '0');
+      text: widget.existing?.discountPercentage.toStringAsFixed(0) ?? '0',
+    );
     _phoneCtrl = TextEditingController(text: widget.existing?.phone ?? '');
+    _category = widget.existing?.category ?? CustomerCategory.a;
   }
 
   @override
@@ -43,7 +46,10 @@ class _CustomerFormSheetState extends ConsumerState<CustomerFormSheet> {
     final s = S.of(context);
     final name = _nameCtrl.text.trim();
     if (name.isEmpty) return;
-    final discount = double.tryParse(_discountCtrl.text.trim()) ?? 0.0;
+    // double.tryParse('nan') NaN gaýtarýar, NaN.clamp() hem NaN bolýar —
+    // şeýle baha bazany döwýär, şonuň üçin aýratyn barlanýar.
+    final parsed = double.tryParse(_discountCtrl.text.trim()) ?? 0.0;
+    final discount = parsed.isFinite ? parsed : 0.0;
 
     setState(() => _isLoading = true);
     try {
@@ -52,6 +58,7 @@ class _CustomerFormSheetState extends ConsumerState<CustomerFormSheet> {
       customer.name = name;
       customer.discountPercentage = discount.clamp(0, 100);
       customer.phone = phone.isEmpty ? null : phone;
+      customer.category = _category;
       if (widget.existing == null) {
         customer.createdAt = DateTime.now();
       }
@@ -59,7 +66,9 @@ class _CustomerFormSheetState extends ConsumerState<CustomerFormSheet> {
       if (mounted) Navigator.pop(context);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${s.errorPrefix}: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('${s.errorPrefix}: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -112,7 +121,10 @@ class _CustomerFormSheetState extends ConsumerState<CustomerFormSheet> {
 
           const SizedBox(height: 16),
 
-          Text(s.discountPercent, style: Theme.of(context).textTheme.labelLarge),
+          Text(
+            s.discountPercent,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
           const SizedBox(height: 8),
           TextField(
             controller: _discountCtrl,
@@ -122,6 +134,21 @@ class _CustomerFormSheetState extends ConsumerState<CustomerFormSheet> {
               suffixText: '%',
               prefixIcon: const Icon(CupertinoIcons.tag, size: 18),
             ),
+          ),
+
+          const SizedBox(height: 16),
+
+          Text(
+            s.customerCategory,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+          const SizedBox(height: 8),
+          SegmentedButton<CustomerCategory>(
+            segments: CustomerCategory.values
+                .map((c) => ButtonSegment(value: c, label: Text(c.label)))
+                .toList(),
+            selected: {_category},
+            onSelectionChanged: (set) => setState(() => _category = set.first),
           ),
 
           const SizedBox(height: 32),

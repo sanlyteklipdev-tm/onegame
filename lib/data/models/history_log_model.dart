@@ -40,6 +40,9 @@ class HistoryLogModel {
   @Index()
   late DateTime createdAt;
 
+  /// Haýsy enjamdan goşuldy. Köne ýazgylarda boş.
+  String? deviceName;
+
   HistoryLogModel();
 
   factory HistoryLogModel.fromSession({

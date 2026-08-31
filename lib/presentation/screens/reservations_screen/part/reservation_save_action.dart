@@ -19,6 +19,7 @@ Future<bool> submitReservation({
   required String title,
   required int? customerId,
   required int? employeeId,
+  required int? serviceId,
   required DateTime start,
   required DateTime end,
 }) async {
@@ -36,6 +37,11 @@ Future<bool> submitReservation({
   }
   if (title.isEmpty) {
     showError(s.enterName);
+    return false;
+  }
+  // Hyzmat hökman saýlanmaly
+  if (serviceId == null) {
+    showError(s.selectServiceFirst);
     return false;
   }
   // Geçen wagta bron döretmek ýa-da bar bolan brony geçen wagta süýşürmek
@@ -59,6 +65,7 @@ Future<bool> submitReservation({
       ..title = title
       ..customerId = customerId
       ..employeeId = employeeId
+      ..serviceId = serviceId
       ..startTime = start
       ..endTime = end;
 

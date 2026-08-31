@@ -45,9 +45,12 @@ class _AddTableSheetState extends ConsumerState<AddTableSheet> {
     setState(() => _isLoading = true);
     try {
       final name = _nameController.text.trim();
-      final price = _isFeatureEnabled
-          ? double.parse(_priceController.text.trim())
+      // 'nan'/'infinity' hem san hökmünde okalýar — beýle baha bazany
+      // döwýär, şonuň üçin diňe çäkli sanlar kabul edilýär.
+      final parsed = _isFeatureEnabled
+          ? double.tryParse(_priceController.text.trim()) ?? 0.0
           : 0.0;
+      final price = parsed.isFinite ? parsed : 0.0;
 
       if (widget.editingTable != null) {
         final updated = widget.editingTable!
@@ -154,7 +157,9 @@ class _AddTableSheetState extends ConsumerState<AddTableSheet> {
                     validator: (v) {
                       if (!_isFeatureEnabled) return null;
                       if (v == null || v.isEmpty) return s.enterPrice;
-                      if (double.tryParse(v) == null) return s.invalidNumber;
+                      // 'nan' we 'infinity' tryParse-den geçýär — kesilýär
+                      final n = double.tryParse(v);
+                      if (n == null || !n.isFinite) return s.invalidNumber;
                       return null;
                     },
                   ),

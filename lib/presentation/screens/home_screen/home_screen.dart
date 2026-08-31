@@ -9,6 +9,7 @@ import '../reservations_screen/reservations_screen.dart';
 import '../settings_screen/settings_screen.dart';
 import '../customers_screen/customers_screen.dart';
 import '../employees_screen/employees_screen.dart';
+import '../services_screen/services_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -25,6 +26,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     const ReservationsScreen(),
     const CustomersScreen(),
     const EmployeesScreen(),
+    const ServicesScreen(),
     const ReportsScreen(),
     const SettingsScreen(),
   ];
@@ -55,6 +57,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         icon: const Icon(CupertinoIcons.briefcase),
         selectedIcon: const Icon(CupertinoIcons.briefcase_fill),
         label: s.employees,
+      ),
+      NavigationDestination(
+        icon: const Icon(CupertinoIcons.sparkles),
+        selectedIcon: const Icon(CupertinoIcons.sparkles),
+        label: s.services,
       ),
       NavigationDestination(
         icon: const Icon(CupertinoIcons.graph_square),
@@ -88,6 +95,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         icon: const Icon(CupertinoIcons.briefcase),
         selectedIcon: const Icon(CupertinoIcons.briefcase_fill),
         label: Text(s.employees),
+      ),
+      NavigationRailDestination(
+        icon: const Icon(CupertinoIcons.sparkles),
+        selectedIcon: const Icon(CupertinoIcons.sparkles),
+        label: Text(s.services),
       ),
       NavigationRailDestination(
         icon: const Icon(CupertinoIcons.graph_square),

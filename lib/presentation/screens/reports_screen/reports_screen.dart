@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/app_localizations.dart';
+import 'part/device_filter_row.dart';
 import 'part/report_filters_section.dart';
 import 'part/report_history_sliver.dart';
 import 'part/report_revenue_card.dart';
@@ -34,6 +35,7 @@ class ReportsScreen extends ConsumerWidget {
 
             // ── Filtrler (çalt filtr, sene aralygy, stol) ──────
             const SliverToBoxAdapter(child: ReportFiltersSection()),
+            const SliverToBoxAdapter(child: DeviceFilterRow()),
 
             // ── Jemi girdeji kartasy ───────────────────────────
             const SliverToBoxAdapter(child: ReportRevenueCard()),

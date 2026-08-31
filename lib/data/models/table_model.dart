@@ -33,6 +33,9 @@ class TableModel {
   /// Döredilen wagty
   late DateTime createdAt;
 
+  /// Haýsy enjamdan goşuldy. Köne ýazgylarda boş.
+  String? deviceName;
+
   TableModel();
 
   factory TableModel.create({

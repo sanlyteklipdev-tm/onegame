@@ -8,7 +8,7 @@ SELECT id, table_id, player_name, session_code, start_time, end_time, status,
        total_price::float8         AS total_price,
        customer_id,
        discount_percentage::float8 AS discount_percentage,
-       reminder_minutes
+       reminder_minutes, device_name
 FROM player_sessions
 ''';
 
@@ -18,7 +18,7 @@ SELECT id, table_id, table_name, session_id, session_code, player_name,
        total_price::float8         AS total_price,
        discount_percentage::float8 AS discount_percentage,
        discount_amount::float8     AS discount_amount,
-       created_at
+       created_at, device_name
 FROM history_logs
 ''';
 
@@ -41,7 +41,8 @@ PlayerSessionModel mapSession(Map<String, dynamic> row) => PlayerSessionModel()
   ..totalPrice = (row['total_price'] as num).toDouble()
   ..customerId = row['customer_id'] as int?
   ..discountPercentage = (row['discount_percentage'] as num).toDouble()
-  ..reminderMinutes = row['reminder_minutes'] as int?;
+  ..reminderMinutes = row['reminder_minutes'] as int?
+  ..deviceName = row['device_name'] as String?;
 
 HistoryLogModel mapHistory(Map<String, dynamic> row) => HistoryLogModel()
   ..id = row['id'] as int
@@ -55,4 +56,5 @@ HistoryLogModel mapHistory(Map<String, dynamic> row) => HistoryLogModel()
   ..totalPrice = (row['total_price'] as num).toDouble()
   ..discountPercentage = (row['discount_percentage'] as num?)?.toDouble()
   ..discountAmount = (row['discount_amount'] as num?)?.toDouble()
-  ..createdAt = (row['created_at'] as DateTime).toLocal();
+  ..createdAt = (row['created_at'] as DateTime).toLocal()
+  ..deviceName = row['device_name'] as String?;

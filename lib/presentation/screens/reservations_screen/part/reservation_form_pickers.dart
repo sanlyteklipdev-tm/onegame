@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/l10n/app_localizations.dart';
+import '../../../../core/utils/formatters.dart';
 import '../../../../data/models/customer_model.dart';
+import '../../../../data/models/employee_model.dart';
 import '../../../providers/providers.dart';
 
 /// Stol saýlaýjy
@@ -103,8 +105,18 @@ class ReservationEmployeePicker extends ConsumerWidget {
 
     return employeesAsync.maybeWhen(
       orElse: () => const SizedBox.shrink(),
-      data: (employees) {
-        // Pozulan işgäre salgylanma galan bolsa dropdown ýykylmasyn
+      data: (all) {
+        // Bronda diňe 2-nji görnüşdäki işgärler saýlanýar.
+        // Direktor görnüşine garamazdan bronda görkezilmeýär.
+        final employees = all
+            .where(
+              (e) =>
+                  e.type == EmployeeType.type2 &&
+                  e.position != EmployeePosition.director,
+            )
+            .toList();
+
+        // Saýlanan işgär soň süzgüçden çykan bolsa dropdown ýykylmasyn
         final exists = employees.any((e) => e.id == employeeId);
         return _PickerRow(
           icon: CupertinoIcons.briefcase,
@@ -112,13 +124,60 @@ class ReservationEmployeePicker extends ConsumerWidget {
             isExpanded: true,
             value: exists ? employeeId : null,
             underline: const SizedBox.shrink(),
-            hint: Text(s.noEmployee),
+            hint: Text(employees.isEmpty ? s.noType2Employees : s.noEmployee),
             items: [
               DropdownMenuItem(value: null, child: Text(s.noEmployee)),
               ...employees.map(
                 (e) => DropdownMenuItem(value: e.id, child: Text(e.name)),
               ),
             ],
+            onChanged: onChanged,
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Hyzmat saýlaýjy — bron üçin hökman
+class ReservationServicePicker extends ConsumerWidget {
+  final int? serviceId;
+  final ValueChanged<int?> onChanged;
+
+  const ReservationServicePicker({
+    super.key,
+    required this.serviceId,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final servicesAsync = ref.watch(servicesStreamProvider);
+    final s = S.of(context);
+
+    return servicesAsync.maybeWhen(
+      orElse: () => const SizedBox.shrink(),
+      data: (services) {
+        // Pozulan hyzmata salgylanma galan bolsa dropdown ýykylmasyn
+        final exists = services.any((x) => x.id == serviceId);
+        return _PickerRow(
+          icon: CupertinoIcons.sparkles,
+          child: DropdownButton<int>(
+            isExpanded: true,
+            value: exists ? serviceId : null,
+            underline: const SizedBox.shrink(),
+            hint: Text(s.selectService),
+            items: services
+                .map(
+                  (x) => DropdownMenuItem(
+                    value: x.id,
+                    child: Text(
+                      '${x.name}  ·  ${AppFormatters.formatPrice(x.price, s.tmt)}',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                )
+                .toList(),
             onChanged: onChanged,
           ),
         );

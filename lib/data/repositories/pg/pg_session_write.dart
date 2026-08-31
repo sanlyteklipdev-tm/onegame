@@ -1,5 +1,6 @@
 import 'package:postgres/postgres.dart';
 
+import '../../../core/services/device_name_service.dart';
 import '../../../core/utils/price_calculator.dart';
 import '../../models/history_log_model.dart';
 import '../../models/player_session_model.dart';
@@ -78,9 +79,9 @@ Future<PlayerSessionModel> startSessionTx(
     INSERT INTO player_sessions
       (table_id, player_name, session_code, start_time, status,
        accumulated_cost, last_checkpoint_time, total_price,
-       customer_id, discount_percentage, reminder_minutes)
+       customer_id, discount_percentage, reminder_minutes, device_name)
     VALUES (@tableId, @name, @code, @start, 'active',
-            0, @start, 0, @customerId, @discount, @reminder)
+            0, @start, 0, @customerId, @discount, @reminder, @device)
     RETURNING id
     ''',
     {
@@ -91,6 +92,7 @@ Future<PlayerSessionModel> startSessionTx(
       'customerId': session.customerId,
       'discount': session.discountPercentage,
       'reminder': session.reminderMinutes,
+      'device': DeviceNameService.current,
     },
   );
 
@@ -114,9 +116,9 @@ Future<void> _insertHistory(TxSession tx, HistoryLogModel log) async {
     INSERT INTO history_logs
       (table_id, table_name, session_id, session_code, player_name,
        start_time, end_time, total_price, discount_percentage,
-       discount_amount, created_at)
+       discount_amount, created_at, device_name)
     VALUES (@tableId, @tableName, @sessionId, @code, @player,
-            @start, @end, @total, @discPct, @discAmt, @createdAt)
+            @start, @end, @total, @discPct, @discAmt, @createdAt, @device)
     ''',
     {
       'tableId': log.tableId,
@@ -130,6 +132,7 @@ Future<void> _insertHistory(TxSession tx, HistoryLogModel log) async {
       'discPct': log.discountPercentage,
       'discAmt': log.discountAmount,
       'createdAt': log.createdAt,
+      'device': DeviceNameService.current,
     },
   );
 }

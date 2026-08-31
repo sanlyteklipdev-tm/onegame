@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
 
 import '../../core/l10n/app_localizations.dart';
 
@@ -13,13 +12,16 @@ import '../../data/models/table_model.dart';
 import '../../data/models/history_log_model.dart';
 import '../../data/models/customer_model.dart';
 import '../../data/models/employee_model.dart';
+import '../../data/models/service_model.dart';
 import '../../data/repositories/table_repository.dart';
 import '../../data/repositories/session_repository.dart';
 import '../../data/repositories/customer_repository.dart';
 import '../../data/repositories/employee_repository.dart';
+import '../../data/repositories/service_repository.dart';
 import '../../data/data_source.dart';
 import '../../data/repositories/pg/pg_customer_repository.dart';
 import '../../data/repositories/pg/pg_employee_repository.dart';
+import '../../data/repositories/pg/pg_service_repository.dart';
 import '../../data/repositories/pg/pg_session_repository.dart';
 import '../../data/repositories/pg/pg_table_repository.dart';
 import '../../core/utils/formatters.dart';
@@ -111,6 +113,41 @@ class EmployeeNotifier extends AsyncNotifier<void> {
 
 final employeeNotifierProvider = AsyncNotifierProvider<EmployeeNotifier, void>(
   EmployeeNotifier.new,
+);
+
+// ════════════════════════════════════════════════════════════
+//  SERVICE PROVIDERS (Hyzmatlar)
+// ════════════════════════════════════════════════════════════
+
+final serviceRepositoryProvider = Provider<ServiceRepository>(
+  (ref) => DataSourceConfig.usePostgres
+      ? PgServiceRepository()
+      : IsarServiceRepository(),
+);
+
+final servicesStreamProvider = StreamProvider<List<ServiceModel>>((ref) {
+  return ref.watch(serviceRepositoryProvider).watchAll();
+});
+
+class ServiceNotifier extends AsyncNotifier<void> {
+  ServiceRepository get _repo => ref.read(serviceRepositoryProvider);
+
+  @override
+  Future<void> build() async {}
+
+  Future<void> saveService(ServiceModel service) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _repo.save(service).then((_) {}));
+  }
+
+  Future<void> deleteService(int id) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _repo.delete(id));
+  }
+}
+
+final serviceNotifierProvider = AsyncNotifierProvider<ServiceNotifier, void>(
+  ServiceNotifier.new,
 );
 
 // ════════════════════════════════════════════════════════════
@@ -300,16 +337,12 @@ class SessionNotifier extends AsyncNotifier<void> {
     required String tableName,
     required double pricePerHour,
   }) async {
-    // Önüm: sessiýa maglumatlaryny saklap, soňra ýap
-    final isar = IsarService.isar;
-    final session = await isar.playerSessionModels.get(sessionId);
+    // Repository arkaly — çeşme Isar ýa-da Postgres bolup biler
+    final activeSessions = await _repo.getActiveSessions(tableId);
+    final session = activeSessions
+        .where((s) => s.id == sessionId)
+        .firstOrNull;
     if (session == null) throw Exception('Sessiýa tapylmady');
-
-    final activeSessions = await isar.playerSessionModels
-        .filter()
-        .tableIdEqualTo(tableId)
-        .statusEqualTo(SessionStatus.active)
-        .findAll();
 
     // Baha preview hasapla (UI üçin)
     final now = DateTime.now();
@@ -362,6 +395,11 @@ class SessionNotifier extends AsyncNotifier<void> {
     required String payerName,
   }) async {
     state = const AsyncLoading();
+
+    // Bildirişleri ýatyrmak üçin sessiýalar stol ýapylmazdan öň alynýar —
+    // ýapylandan soň olar eýýäm 'finished' bolýar we tapylmaz.
+    final sessionsToCancel = await _repo.getActiveSessions(tableId);
+
     final log = await _repo.stopTable(
       tableId: tableId,
       tableName: tableName,
@@ -369,14 +407,7 @@ class SessionNotifier extends AsyncNotifier<void> {
       payerName: payerName,
     );
 
-    // Ähli aktiw bildirişleri ýatyr
-    final isar = IsarService.isar;
-    final sessions = await isar.playerSessionModels
-        .filter()
-        .tableIdEqualTo(tableId)
-        .statusEqualTo(SessionStatus.active)
-        .findAll();
-    for (final s in sessions) {
+    for (final s in sessionsToCancel) {
       await _notif.cancelReminder(s.id);
     }
 
@@ -394,14 +425,11 @@ class SessionNotifier extends AsyncNotifier<void> {
 
   /// Bildiriş baha ber we sazla
   Future<void> updateReminder(int sessionId, int? minutes) async {
-    final isar = IsarService.isar;
-    final session = await isar.playerSessionModels.get(sessionId);
+    final session = await _repo.getSessionById(sessionId);
     if (session == null) return;
 
-    await isar.writeTxn(() async {
-      session.reminderMinutes = minutes;
-      await isar.playerSessionModels.put(session);
-    });
+    await _repo.setReminderMinutes(sessionId, minutes);
+    session.reminderMinutes = minutes;
 
     await _notif.cancelReminder(sessionId);
     if (minutes != null) {
@@ -413,8 +441,9 @@ class SessionNotifier extends AsyncNotifier<void> {
   Future<void> _scheduleReminder(PlayerSessionModel session) async {
     if (session.reminderMinutes == null) return;
 
-    final isar = IsarService.isar;
-    final table = await isar.tableModels.get(session.tableId);
+    final table = await ref
+        .read(tableRepositoryProvider)
+        .getTableById(session.tableId);
     final tableName = table?.name ?? 'Stol';
 
     final lang = ref.read(appLanguageProvider);
@@ -575,8 +604,56 @@ final filteredHistoryProvider = FutureProvider<List<HistoryLogModel>>((
   );
 });
 
-/// Filterlenen jemi girdeji
+// ── Enjam boýunça süzgüç ────────────────────────────────────
+
+/// null = ähli enjamlar
+class ReportDeviceFilter extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  void select(String? device) => state = device;
+}
+
+final reportDeviceFilterProvider =
+    NotifierProvider<ReportDeviceFilter, String?>(ReportDeviceFilter.new);
+
+/// Saýlanan aralykda duşýan enjamlaryň sanawy (süzgüç çipleri üçin)
+final historyDevicesProvider = Provider<List<String>>((ref) {
+  final logs = ref
+      .watch(filteredHistoryProvider)
+      .maybeWhen(data: (l) => l, orElse: () => <HistoryLogModel>[]);
+  final names = logs
+      .map((l) => l.deviceName)
+      .whereType<String>()
+      .where((n) => n.trim().isNotEmpty)
+      .toSet()
+      .toList()
+    ..sort();
+  return names;
+});
+
+/// Enjam süzgüji ulanylan taryh
+final deviceFilteredHistoryProvider =
+    Provider<AsyncValue<List<HistoryLogModel>>>((ref) {
+      final device = ref.watch(reportDeviceFilterProvider);
+      return ref.watch(filteredHistoryProvider).whenData((logs) {
+        if (device == null) return logs;
+        return logs.where((l) => l.deviceName == device).toList();
+      });
+    });
+
+/// Filterlenen jemi girdeji.
+/// Enjam saýlanan bolsa, jem şol enjamyň ýazgylary boýunça hasaplanýar.
 final filteredRevenueProvider = FutureProvider<double>((ref) async {
+  final device = ref.watch(reportDeviceFilterProvider);
+
+  if (device != null) {
+    final logs = ref
+        .watch(deviceFilteredHistoryProvider)
+        .maybeWhen(data: (l) => l, orElse: () => <HistoryLogModel>[]);
+    return logs.fold<double>(0, (sum, l) => sum + l.totalPrice);
+  }
+
   final filter = ref.watch(reportFilterProvider);
   final repo = ref.watch(sessionRepositoryProvider);
   return repo.getTotalRevenue(

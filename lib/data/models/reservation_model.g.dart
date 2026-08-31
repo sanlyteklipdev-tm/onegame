@@ -27,44 +27,54 @@ const ReservationModelSchema = CollectionSchema(
       name: r'customerId',
       type: IsarType.long,
     ),
-    r'employeeId': PropertySchema(
+    r'deviceName': PropertySchema(
       id: 2,
+      name: r'deviceName',
+      type: IsarType.string,
+    ),
+    r'employeeId': PropertySchema(
+      id: 3,
       name: r'employeeId',
       type: IsarType.long,
     ),
     r'endTime': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'endTime',
       type: IsarType.dateTime,
     ),
     r'isPending': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'isPending',
       type: IsarType.bool,
     ),
     r'isStarted': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'isStarted',
       type: IsarType.bool,
     ),
+    r'serviceId': PropertySchema(
+      id: 7,
+      name: r'serviceId',
+      type: IsarType.long,
+    ),
     r'startTime': PropertySchema(
-      id: 6,
+      id: 8,
       name: r'startTime',
       type: IsarType.dateTime,
     ),
     r'status': PropertySchema(
-      id: 7,
+      id: 9,
       name: r'status',
       type: IsarType.byte,
       enumMap: _ReservationModelstatusEnumValueMap,
     ),
     r'tableId': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'tableId',
       type: IsarType.long,
     ),
     r'title': PropertySchema(
-      id: 9,
+      id: 11,
       name: r'title',
       type: IsarType.string,
     )
@@ -116,6 +126,12 @@ int _reservationModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.deviceName;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.title.length * 3;
   return bytesCount;
 }
@@ -128,14 +144,16 @@ void _reservationModelSerialize(
 ) {
   writer.writeDateTime(offsets[0], object.createdAt);
   writer.writeLong(offsets[1], object.customerId);
-  writer.writeLong(offsets[2], object.employeeId);
-  writer.writeDateTime(offsets[3], object.endTime);
-  writer.writeBool(offsets[4], object.isPending);
-  writer.writeBool(offsets[5], object.isStarted);
-  writer.writeDateTime(offsets[6], object.startTime);
-  writer.writeByte(offsets[7], object.status.index);
-  writer.writeLong(offsets[8], object.tableId);
-  writer.writeString(offsets[9], object.title);
+  writer.writeString(offsets[2], object.deviceName);
+  writer.writeLong(offsets[3], object.employeeId);
+  writer.writeDateTime(offsets[4], object.endTime);
+  writer.writeBool(offsets[5], object.isPending);
+  writer.writeBool(offsets[6], object.isStarted);
+  writer.writeLong(offsets[7], object.serviceId);
+  writer.writeDateTime(offsets[8], object.startTime);
+  writer.writeByte(offsets[9], object.status.index);
+  writer.writeLong(offsets[10], object.tableId);
+  writer.writeString(offsets[11], object.title);
 }
 
 ReservationModel _reservationModelDeserialize(
@@ -147,15 +165,17 @@ ReservationModel _reservationModelDeserialize(
   final object = ReservationModel();
   object.createdAt = reader.readDateTime(offsets[0]);
   object.customerId = reader.readLongOrNull(offsets[1]);
-  object.employeeId = reader.readLongOrNull(offsets[2]);
-  object.endTime = reader.readDateTime(offsets[3]);
+  object.deviceName = reader.readStringOrNull(offsets[2]);
+  object.employeeId = reader.readLongOrNull(offsets[3]);
+  object.endTime = reader.readDateTime(offsets[4]);
   object.id = id;
-  object.startTime = reader.readDateTime(offsets[6]);
+  object.serviceId = reader.readLongOrNull(offsets[7]);
+  object.startTime = reader.readDateTime(offsets[8]);
   object.status =
-      _ReservationModelstatusValueEnumMap[reader.readByteOrNull(offsets[7])] ??
+      _ReservationModelstatusValueEnumMap[reader.readByteOrNull(offsets[9])] ??
           ReservationStatus.pending;
-  object.tableId = reader.readLong(offsets[8]);
-  object.title = reader.readString(offsets[9]);
+  object.tableId = reader.readLong(offsets[10]);
+  object.title = reader.readString(offsets[11]);
   return object;
 }
 
@@ -171,22 +191,26 @@ P _reservationModelDeserializeProp<P>(
     case 1:
       return (reader.readLongOrNull(offset)) as P;
     case 2:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 4:
-      return (reader.readBool(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 5:
       return (reader.readBool(offset)) as P;
     case 6:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 7:
+      return (reader.readLongOrNull(offset)) as P;
+    case 8:
+      return (reader.readDateTime(offset)) as P;
+    case 9:
       return (_ReservationModelstatusValueEnumMap[
               reader.readByteOrNull(offset)] ??
           ReservationStatus.pending) as P;
-    case 8:
+    case 10:
       return (reader.readLong(offset)) as P;
-    case 9:
+    case 11:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -629,6 +653,160 @@ extension ReservationModelQueryFilter
   }
 
   QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      deviceNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'deviceName',
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      deviceNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'deviceName',
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      deviceNameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      deviceNameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      deviceNameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      deviceNameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'deviceName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      deviceNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      deviceNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      deviceNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'deviceName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      deviceNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'deviceName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      deviceNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'deviceName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      deviceNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'deviceName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
       employeeIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -830,6 +1008,80 @@ extension ReservationModelQueryFilter
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isStarted',
         value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      serviceIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'serviceId',
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      serviceIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'serviceId',
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      serviceIdEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'serviceId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      serviceIdGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'serviceId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      serviceIdLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'serviceId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      serviceIdBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'serviceId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -1176,6 +1428,20 @@ extension ReservationModelQuerySortBy
   }
 
   QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
+      sortByDeviceName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
+      sortByDeviceNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
       sortByEmployeeId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'employeeId', Sort.asc);
@@ -1228,6 +1494,20 @@ extension ReservationModelQuerySortBy
       sortByIsStartedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isStarted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
+      sortByServiceId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'serviceId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
+      sortByServiceIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'serviceId', Sort.desc);
     });
   }
 
@@ -1318,6 +1598,20 @@ extension ReservationModelQuerySortThenBy
   }
 
   QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
+      thenByDeviceName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
+      thenByDeviceNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'deviceName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
       thenByEmployeeId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'employeeId', Sort.asc);
@@ -1383,6 +1677,20 @@ extension ReservationModelQuerySortThenBy
       thenByIsStartedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isStarted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
+      thenByServiceId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'serviceId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
+      thenByServiceIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'serviceId', Sort.desc);
     });
   }
 
@@ -1459,6 +1767,13 @@ extension ReservationModelQueryWhereDistinct
   }
 
   QueryBuilder<ReservationModel, ReservationModel, QDistinct>
+      distinctByDeviceName({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'deviceName', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QDistinct>
       distinctByEmployeeId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'employeeId');
@@ -1483,6 +1798,13 @@ extension ReservationModelQueryWhereDistinct
       distinctByIsStarted() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isStarted');
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QDistinct>
+      distinctByServiceId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'serviceId');
     });
   }
 
@@ -1536,6 +1858,13 @@ extension ReservationModelQueryProperty
     });
   }
 
+  QueryBuilder<ReservationModel, String?, QQueryOperations>
+      deviceNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'deviceName');
+    });
+  }
+
   QueryBuilder<ReservationModel, int?, QQueryOperations> employeeIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'employeeId');
@@ -1557,6 +1886,12 @@ extension ReservationModelQueryProperty
   QueryBuilder<ReservationModel, bool, QQueryOperations> isStartedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isStarted');
+    });
+  }
+
+  QueryBuilder<ReservationModel, int?, QQueryOperations> serviceIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'serviceId');
     });
   }
 

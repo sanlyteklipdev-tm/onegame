@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 
+import '../../../core/services/device_name_service.dart';
 import '../../models/customer_model.dart';
 import '../../remote/pg_stream.dart';
 import '../../remote/postgres_service.dart';
@@ -9,7 +10,7 @@ import '../customer_repository.dart';
 /// göni `double` edip berýär, setire öwrülmeýär.
 const _select = '''
 SELECT id, name, discount_percentage::float8 AS discount_percentage,
-       phone, created_at
+       phone, category, created_at, device_name
 FROM customers
 ''';
 
@@ -18,7 +19,9 @@ CustomerModel _map(Map<String, dynamic> row) => CustomerModel()
   ..name = row['name'] as String
   ..discountPercentage = (row['discount_percentage'] as num).toDouble()
   ..phone = row['phone'] as String?
-  ..createdAt = (row['created_at'] as DateTime).toLocal();
+  ..category = CustomerCategoryX.fromDb(row['category'] as String)
+  ..createdAt = (row['created_at'] as DateTime).toLocal()
+  ..deviceName = row['device_name'] as String?;
 
 class PgCustomerRepository implements CustomerRepository {
   @override
@@ -47,15 +50,16 @@ class PgCustomerRepository implements CustomerRepository {
     final res = await PostgresService.query(
       isNew
           ? '''
-            INSERT INTO customers (name, discount_percentage, phone)
-            VALUES (@name, @discount, @phone)
+            INSERT INTO customers (name, discount_percentage, phone, category, device_name)
+            VALUES (@name, @discount, @phone, @category, @device)
             RETURNING id
             '''
           : '''
             UPDATE customers
             SET name = @name,
                 discount_percentage = @discount,
-                phone = @phone
+                phone = @phone,
+                category = @category
             WHERE id = @id
             RETURNING id
             ''',
@@ -63,6 +67,8 @@ class PgCustomerRepository implements CustomerRepository {
         'name': customer.name,
         'discount': customer.discountPercentage,
         'phone': customer.phone,
+        'category': customer.category.label,
+        if (isNew) 'device': DeviceNameService.current,
         if (!isNew) 'id': customer.id,
       },
     );

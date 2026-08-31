@@ -67,6 +67,9 @@ class PlayerSessionModel {
   /// Bildiriş ugratmaly wagt (minutda). Null bolsa bildiriş gelmez.
   int? reminderMinutes;
 
+  /// Haýsy enjamdan goşuldy. Köne ýazgylarda boş.
+  String? deviceName;
+
   PlayerSessionModel();
 
   factory PlayerSessionModel.create({

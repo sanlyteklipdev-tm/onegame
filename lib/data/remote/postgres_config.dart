@@ -1,10 +1,11 @@
-/// PostgreSQL birikme sazlamalary.
+/// Настройки подключения к PostgreSQL.
 ///
-/// Häzirlikçe synag üçin lokal baza. Serwere geçilende diňe şu ýer
-/// üýtgeýär — [ApiConfig] bilen deň ýörelge.
+/// Пока что — локальная база для тестирования. При переходе на сервер
+/// меняется только это место — тот же подход, что и с [ApiConfig].
 ///
-/// ÜNS: parol kodda saklanýar. Bu diňe lokal synag üçin kabul ederlik.
-/// Programma paýlanmazdan öň arasynda API gatlagy bolmaly.
+/// ВНИМАНИЕ: пароль хранится в коде. Это допустимо только для локального
+/// тестирования. Перед распространением приложения между ним и базой
+/// должен быть API-слой.
 class PostgresConfig {
   PostgresConfig._();
 
@@ -12,13 +13,20 @@ class PostgresConfig {
   static const int port = 5432;
   static const String database = 'billiard';
   static const String username = 'billiard_app';
-  static const String password = 'Bil_7kQm2xTvZ9';
 
-  /// Telefondan birikmek üçin kompýuteriň ýerli tor salgysy gerek
-  /// (127.0.0.1 telefonda öz özüne salgylanýar).
-  /// Meselem: '192.168.1.50'
-  static const String? lanHost = null;
+  /// Пароль не прописывается в коде — репозиторий открытый, история git
+  /// сохраняется навсегда. Передаётся при сборке:
+  ///   flutter run   -d windows --release --dart-define=PG_PASSWORD=...
+  ///   flutter build apk        --release --dart-define=PG_PASSWORD=...
+  static const String password = String.fromEnvironment(
+    'PG_PASSWORD',
+    defaultValue: 'change_me',
+  );
 
-  /// Hakyky ulanylýan host
+  /// Локальный сетевой адрес компьютера для подключения с телефона.
+  /// На телефоне 127.0.0.1 — это сам телефон, поэтому нужен этот адрес.
+  static const String? lanHost = '192.168.0.110';
+
+  /// Реально используемый хост
   static String get effectiveHost => lanHost ?? host;
 }

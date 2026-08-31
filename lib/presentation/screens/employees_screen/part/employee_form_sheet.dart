@@ -19,7 +19,8 @@ class EmployeeFormSheet extends ConsumerStatefulWidget {
 class _EmployeeFormSheetState extends ConsumerState<EmployeeFormSheet> {
   late final TextEditingController _nameCtrl;
   late final TextEditingController _phoneCtrl;
-  late EmployeeCategory _category;
+  late EmployeePosition _position;
+  late EmployeeType _type;
   bool _isLoading = false;
 
   @override
@@ -27,7 +28,8 @@ class _EmployeeFormSheetState extends ConsumerState<EmployeeFormSheet> {
     super.initState();
     _nameCtrl = TextEditingController(text: widget.existing?.name ?? '');
     _phoneCtrl = TextEditingController(text: widget.existing?.phone ?? '');
-    _category = widget.existing?.category ?? EmployeeCategory.a;
+    _position = widget.existing?.position ?? EmployeePosition.manager;
+    _type = widget.existing?.type ?? EmployeeType.type1;
   }
 
   @override
@@ -53,7 +55,8 @@ class _EmployeeFormSheetState extends ConsumerState<EmployeeFormSheet> {
       employee
         ..name = name
         ..phone = phone.isEmpty ? null : phone
-        ..category = _category;
+        ..position = _position
+        ..type = _type;
 
       await ref.read(employeeNotifierProvider.notifier).saveEmployee(employee);
       navigator.pop();
@@ -111,19 +114,46 @@ class _EmployeeFormSheetState extends ConsumerState<EmployeeFormSheet> {
           const SizedBox(height: 16),
 
           Text(
-            s.employeeCategory,
+            s.employeePosition,
             style: Theme.of(context).textTheme.labelLarge,
           ),
           const SizedBox(height: 8),
-          SegmentedButton<EmployeeCategory>(
-            segments: EmployeeCategory.values
+          DropdownButtonFormField<EmployeePosition>(
+            initialValue: _position,
+            decoration: const InputDecoration(
+              prefixIcon: Icon(CupertinoIcons.briefcase, size: 18),
+            ),
+            items: EmployeePosition.values
                 .map(
-                  (c) => ButtonSegment(value: c, label: Text(c.label)),
+                  (p) => DropdownMenuItem(
+                    value: p,
+                    child: Text(s.positionLabel(p)),
+                  ),
                 )
                 .toList(),
-            selected: {_category},
-            onSelectionChanged: (set) =>
-                setState(() => _category = set.first),
+            onChanged: (p) {
+              if (p != null) setState(() => _position = p);
+            },
+          ),
+
+          const SizedBox(height: 16),
+
+          Text(s.employeeType, style: Theme.of(context).textTheme.labelLarge),
+          const SizedBox(height: 8),
+          DropdownButtonFormField<EmployeeType>(
+            initialValue: _type,
+            decoration: const InputDecoration(
+              prefixIcon: Icon(CupertinoIcons.square_stack_3d_up, size: 18),
+            ),
+            items: EmployeeType.values
+                .map(
+                  (t) =>
+                      DropdownMenuItem(value: t, child: Text(s.typeLabel(t))),
+                )
+                .toList(),
+            onChanged: (t) {
+              if (t != null) setState(() => _type = t);
+            },
           ),
 
           const SizedBox(height: 32),

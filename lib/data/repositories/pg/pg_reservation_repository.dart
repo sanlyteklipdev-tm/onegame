@@ -1,13 +1,14 @@
 import 'package:isar/isar.dart';
 
+import '../../../core/services/device_name_service.dart';
 import '../../models/reservation_model.dart';
 import '../../remote/pg_stream.dart';
 import '../../remote/postgres_service.dart';
 import '../reservation_repository.dart';
 
 const _select = '''
-SELECT id, table_id, title, customer_id, employee_id,
-       start_time, end_time, status, created_at
+SELECT id, table_id, title, customer_id, employee_id, service_id,
+       start_time, end_time, status, created_at, device_name
 FROM reservations
 ''';
 
@@ -23,10 +24,12 @@ ReservationModel _map(Map<String, dynamic> row) => ReservationModel()
   ..title = row['title'] as String
   ..customerId = row['customer_id'] as int?
   ..employeeId = row['employee_id'] as int?
+  ..serviceId = row['service_id'] as int?
   ..startTime = (row['start_time'] as DateTime).toLocal()
   ..endTime = (row['end_time'] as DateTime).toLocal()
   ..status = _statusFromDb(row['status'] as String)
-  ..createdAt = (row['created_at'] as DateTime).toLocal();
+  ..createdAt = (row['created_at'] as DateTime).toLocal()
+  ..deviceName = row['device_name'] as String?;
 
 class PgReservationRepository implements ReservationRepository {
   @override
@@ -93,10 +96,10 @@ class PgReservationRepository implements ReservationRepository {
       isNew
           ? '''
             INSERT INTO reservations
-              (table_id, title, customer_id, employee_id,
-               start_time, end_time, status)
-            VALUES (@tableId, @title, @customerId, @employeeId,
-                    @startTime, @endTime, @status)
+              (table_id, title, customer_id, employee_id, service_id,
+               start_time, end_time, status, device_name)
+            VALUES (@tableId, @title, @customerId, @employeeId, @serviceId,
+                    @startTime, @endTime, @status, @device)
             RETURNING id
             '''
           : '''
@@ -105,6 +108,7 @@ class PgReservationRepository implements ReservationRepository {
                 title = @title,
                 customer_id = @customerId,
                 employee_id = @employeeId,
+                service_id = @serviceId,
                 start_time = @startTime,
                 end_time = @endTime,
                 status = @status
@@ -116,9 +120,11 @@ class PgReservationRepository implements ReservationRepository {
         'title': reservation.title,
         'customerId': reservation.customerId,
         'employeeId': reservation.employeeId,
+        'serviceId': reservation.serviceId,
         'startTime': reservation.startTime,
         'endTime': reservation.endTime,
         'status': _statusToDb(reservation.status),
+        if (isNew) 'device': DeviceNameService.current,
         if (!isNew) 'id': reservation.id,
       },
     );

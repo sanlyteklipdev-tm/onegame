@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'customer_model.dart';
+part of 'service_model.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,50 +9,39 @@ part of 'customer_model.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetCustomerModelCollection on Isar {
-  IsarCollection<CustomerModel> get customerModels => this.collection();
+extension GetServiceModelCollection on Isar {
+  IsarCollection<ServiceModel> get serviceModels => this.collection();
 }
 
-const CustomerModelSchema = CollectionSchema(
-  name: r'CustomerModel',
-  id: -2515451200106855952,
+const ServiceModelSchema = CollectionSchema(
+  name: r'ServiceModel',
+  id: -8100188801209214237,
   properties: {
-    r'category': PropertySchema(
-      id: 0,
-      name: r'category',
-      type: IsarType.byte,
-      enumMap: _CustomerModelcategoryEnumValueMap,
-    ),
     r'createdAt': PropertySchema(
-      id: 1,
+      id: 0,
       name: r'createdAt',
       type: IsarType.dateTime,
     ),
     r'deviceName': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'deviceName',
       type: IsarType.string,
     ),
-    r'discountPercentage': PropertySchema(
-      id: 3,
-      name: r'discountPercentage',
-      type: IsarType.double,
-    ),
     r'name': PropertySchema(
-      id: 4,
+      id: 2,
       name: r'name',
       type: IsarType.string,
     ),
-    r'phone': PropertySchema(
-      id: 5,
-      name: r'phone',
-      type: IsarType.string,
+    r'price': PropertySchema(
+      id: 3,
+      name: r'price',
+      type: IsarType.double,
     )
   },
-  estimateSize: _customerModelEstimateSize,
-  serialize: _customerModelSerialize,
-  deserialize: _customerModelDeserialize,
-  deserializeProp: _customerModelDeserializeProp,
+  estimateSize: _serviceModelEstimateSize,
+  serialize: _serviceModelSerialize,
+  deserialize: _serviceModelDeserialize,
+  deserializeProp: _serviceModelDeserializeProp,
   idName: r'id',
   indexes: {
     r'name': IndexSchema(
@@ -64,7 +53,7 @@ const CustomerModelSchema = CollectionSchema(
         IndexPropertySchema(
           name: r'name',
           type: IndexType.hash,
-          caseSensitive: true,
+          caseSensitive: false,
         )
       ],
     ),
@@ -84,14 +73,14 @@ const CustomerModelSchema = CollectionSchema(
   },
   links: {},
   embeddedSchemas: {},
-  getId: _customerModelGetId,
-  getLinks: _customerModelGetLinks,
-  attach: _customerModelAttach,
+  getId: _serviceModelGetId,
+  getLinks: _serviceModelGetLinks,
+  attach: _serviceModelAttach,
   version: '3.1.0+1',
 );
 
-int _customerModelEstimateSize(
-  CustomerModel object,
+int _serviceModelEstimateSize(
+  ServiceModel object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -103,49 +92,37 @@ int _customerModelEstimateSize(
     }
   }
   bytesCount += 3 + object.name.length * 3;
-  {
-    final value = object.phone;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
   return bytesCount;
 }
 
-void _customerModelSerialize(
-  CustomerModel object,
+void _serviceModelSerialize(
+  ServiceModel object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeByte(offsets[0], object.category.index);
-  writer.writeDateTime(offsets[1], object.createdAt);
-  writer.writeString(offsets[2], object.deviceName);
-  writer.writeDouble(offsets[3], object.discountPercentage);
-  writer.writeString(offsets[4], object.name);
-  writer.writeString(offsets[5], object.phone);
+  writer.writeDateTime(offsets[0], object.createdAt);
+  writer.writeString(offsets[1], object.deviceName);
+  writer.writeString(offsets[2], object.name);
+  writer.writeDouble(offsets[3], object.price);
 }
 
-CustomerModel _customerModelDeserialize(
+ServiceModel _serviceModelDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = CustomerModel();
-  object.category =
-      _CustomerModelcategoryValueEnumMap[reader.readByteOrNull(offsets[0])] ??
-          CustomerCategory.a;
-  object.createdAt = reader.readDateTime(offsets[1]);
-  object.deviceName = reader.readStringOrNull(offsets[2]);
-  object.discountPercentage = reader.readDouble(offsets[3]);
+  final object = ServiceModel();
+  object.createdAt = reader.readDateTime(offsets[0]);
+  object.deviceName = reader.readStringOrNull(offsets[1]);
   object.id = id;
-  object.name = reader.readString(offsets[4]);
-  object.phone = reader.readStringOrNull(offsets[5]);
+  object.name = reader.readString(offsets[2]);
+  object.price = reader.readDouble(offsets[3]);
   return object;
 }
 
-P _customerModelDeserializeProp<P>(
+P _serviceModelDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -153,54 +130,37 @@ P _customerModelDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (_CustomerModelcategoryValueEnumMap[
-              reader.readByteOrNull(offset)] ??
-          CustomerCategory.a) as P;
-    case 1:
       return (reader.readDateTime(offset)) as P;
-    case 2:
+    case 1:
       return (reader.readStringOrNull(offset)) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
     case 3:
       return (reader.readDouble(offset)) as P;
-    case 4:
-      return (reader.readString(offset)) as P;
-    case 5:
-      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-const _CustomerModelcategoryEnumValueMap = {
-  'a': 0,
-  'b': 1,
-  'c': 2,
-};
-const _CustomerModelcategoryValueEnumMap = {
-  0: CustomerCategory.a,
-  1: CustomerCategory.b,
-  2: CustomerCategory.c,
-};
-
-Id _customerModelGetId(CustomerModel object) {
+Id _serviceModelGetId(ServiceModel object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _customerModelGetLinks(CustomerModel object) {
+List<IsarLinkBase<dynamic>> _serviceModelGetLinks(ServiceModel object) {
   return [];
 }
 
-void _customerModelAttach(
-    IsarCollection<dynamic> col, Id id, CustomerModel object) {
+void _serviceModelAttach(
+    IsarCollection<dynamic> col, Id id, ServiceModel object) {
   object.id = id;
 }
 
-extension CustomerModelByIndex on IsarCollection<CustomerModel> {
-  Future<CustomerModel?> getByName(String name) {
+extension ServiceModelByIndex on IsarCollection<ServiceModel> {
+  Future<ServiceModel?> getByName(String name) {
     return getByIndex(r'name', [name]);
   }
 
-  CustomerModel? getByNameSync(String name) {
+  ServiceModel? getByNameSync(String name) {
     return getByIndexSync(r'name', [name]);
   }
 
@@ -212,12 +172,12 @@ extension CustomerModelByIndex on IsarCollection<CustomerModel> {
     return deleteByIndexSync(r'name', [name]);
   }
 
-  Future<List<CustomerModel?>> getAllByName(List<String> nameValues) {
+  Future<List<ServiceModel?>> getAllByName(List<String> nameValues) {
     final values = nameValues.map((e) => [e]).toList();
     return getAllByIndex(r'name', values);
   }
 
-  List<CustomerModel?> getAllByNameSync(List<String> nameValues) {
+  List<ServiceModel?> getAllByNameSync(List<String> nameValues) {
     final values = nameValues.map((e) => [e]).toList();
     return getAllByIndexSync(r'name', values);
   }
@@ -232,33 +192,33 @@ extension CustomerModelByIndex on IsarCollection<CustomerModel> {
     return deleteAllByIndexSync(r'name', values);
   }
 
-  Future<Id> putByName(CustomerModel object) {
+  Future<Id> putByName(ServiceModel object) {
     return putByIndex(r'name', object);
   }
 
-  Id putByNameSync(CustomerModel object, {bool saveLinks = true}) {
+  Id putByNameSync(ServiceModel object, {bool saveLinks = true}) {
     return putByIndexSync(r'name', object, saveLinks: saveLinks);
   }
 
-  Future<List<Id>> putAllByName(List<CustomerModel> objects) {
+  Future<List<Id>> putAllByName(List<ServiceModel> objects) {
     return putAllByIndex(r'name', objects);
   }
 
-  List<Id> putAllByNameSync(List<CustomerModel> objects,
+  List<Id> putAllByNameSync(List<ServiceModel> objects,
       {bool saveLinks = true}) {
     return putAllByIndexSync(r'name', objects, saveLinks: saveLinks);
   }
 }
 
-extension CustomerModelQueryWhereSort
-    on QueryBuilder<CustomerModel, CustomerModel, QWhere> {
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhere> anyId() {
+extension ServiceModelQueryWhereSort
+    on QueryBuilder<ServiceModel, ServiceModel, QWhere> {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhere> anyCreatedAt() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhere> anyCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'createdAt'),
@@ -267,10 +227,9 @@ extension CustomerModelQueryWhereSort
   }
 }
 
-extension CustomerModelQueryWhere
-    on QueryBuilder<CustomerModel, CustomerModel, QWhereClause> {
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhereClause> idEqualTo(
-      Id id) {
+extension ServiceModelQueryWhere
+    on QueryBuilder<ServiceModel, ServiceModel, QWhereClause> {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -279,7 +238,7 @@ extension CustomerModelQueryWhere
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhereClause> idNotEqualTo(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhereClause> idNotEqualTo(
       Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -302,7 +261,7 @@ extension CustomerModelQueryWhere
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhereClause> idGreaterThan(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhereClause> idGreaterThan(
       Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
@@ -312,8 +271,7 @@ extension CustomerModelQueryWhere
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhereClause> idLessThan(
-      Id id,
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -322,7 +280,7 @@ extension CustomerModelQueryWhere
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhereClause> idBetween(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -338,7 +296,7 @@ extension CustomerModelQueryWhere
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhereClause> nameEqualTo(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhereClause> nameEqualTo(
       String name) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
@@ -348,7 +306,7 @@ extension CustomerModelQueryWhere
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhereClause> nameNotEqualTo(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhereClause> nameNotEqualTo(
       String name) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -383,8 +341,8 @@ extension CustomerModelQueryWhere
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhereClause>
-      createdAtEqualTo(DateTime createdAt) {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhereClause> createdAtEqualTo(
+      DateTime createdAt) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'createdAt',
@@ -393,7 +351,7 @@ extension CustomerModelQueryWhere
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhereClause>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhereClause>
       createdAtNotEqualTo(DateTime createdAt) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -428,7 +386,7 @@ extension CustomerModelQueryWhere
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhereClause>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhereClause>
       createdAtGreaterThan(
     DateTime createdAt, {
     bool include = false,
@@ -443,8 +401,7 @@ extension CustomerModelQueryWhere
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhereClause>
-      createdAtLessThan(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhereClause> createdAtLessThan(
     DateTime createdAt, {
     bool include = false,
   }) {
@@ -458,8 +415,7 @@ extension CustomerModelQueryWhere
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterWhereClause>
-      createdAtBetween(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterWhereClause> createdAtBetween(
     DateTime lowerCreatedAt,
     DateTime upperCreatedAt, {
     bool includeLower = true,
@@ -477,65 +433,9 @@ extension CustomerModelQueryWhere
   }
 }
 
-extension CustomerModelQueryFilter
-    on QueryBuilder<CustomerModel, CustomerModel, QFilterCondition> {
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      categoryEqualTo(CustomerCategory value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'category',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      categoryGreaterThan(
-    CustomerCategory value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'category',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      categoryLessThan(
-    CustomerCategory value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'category',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      categoryBetween(
-    CustomerCategory lower,
-    CustomerCategory upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'category',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+extension ServiceModelQueryFilter
+    on QueryBuilder<ServiceModel, ServiceModel, QFilterCondition> {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       createdAtEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -545,7 +445,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       createdAtGreaterThan(
     DateTime value, {
     bool include = false,
@@ -559,7 +459,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       createdAtLessThan(
     DateTime value, {
     bool include = false,
@@ -573,7 +473,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       createdAtBetween(
     DateTime lower,
     DateTime upper, {
@@ -591,7 +491,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       deviceNameIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -600,7 +500,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       deviceNameIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -609,7 +509,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       deviceNameEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -623,7 +523,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       deviceNameGreaterThan(
     String? value, {
     bool include = false,
@@ -639,7 +539,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       deviceNameLessThan(
     String? value, {
     bool include = false,
@@ -655,7 +555,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       deviceNameBetween(
     String? lower,
     String? upper, {
@@ -675,7 +575,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       deviceNameStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -689,7 +589,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       deviceNameEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -703,7 +603,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       deviceNameContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -714,7 +614,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       deviceNameMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -725,7 +625,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       deviceNameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -735,7 +635,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       deviceNameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -745,73 +645,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      discountPercentageEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'discountPercentage',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      discountPercentageGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'discountPercentage',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      discountPercentageLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'discountPercentage',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      discountPercentageBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'discountPercentage',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition> idEqualTo(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -821,8 +655,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      idGreaterThan(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -835,7 +668,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition> idLessThan(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -848,7 +681,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition> idBetween(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -865,7 +698,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition> nameEqualTo(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -878,7 +711,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       nameGreaterThan(
     String value, {
     bool include = false,
@@ -894,8 +727,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      nameLessThan(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> nameLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -910,7 +742,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition> nameBetween(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> nameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -929,7 +761,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       nameStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -943,8 +775,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      nameEndsWith(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> nameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -957,8 +788,9 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      nameContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> nameContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'name',
@@ -968,7 +800,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition> nameMatches(
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> nameMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -980,7 +812,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -990,7 +822,7 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
       nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -1000,425 +832,250 @@ extension CustomerModelQueryFilter
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      phoneIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'phone',
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      phoneIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'phone',
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      phoneEqualTo(
-    String? value, {
-    bool caseSensitive = true,
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> priceEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'phone',
+        property: r'price',
         value: value,
-        caseSensitive: caseSensitive,
+        epsilon: epsilon,
       ));
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      phoneGreaterThan(
-    String? value, {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition>
+      priceGreaterThan(
+    double value, {
     bool include = false,
-    bool caseSensitive = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'phone',
+        property: r'price',
         value: value,
-        caseSensitive: caseSensitive,
+        epsilon: epsilon,
       ));
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      phoneLessThan(
-    String? value, {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> priceLessThan(
+    double value, {
     bool include = false,
-    bool caseSensitive = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'phone',
+        property: r'price',
         value: value,
-        caseSensitive: caseSensitive,
+        epsilon: epsilon,
       ));
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      phoneBetween(
-    String? lower,
-    String? upper, {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterFilterCondition> priceBetween(
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'phone',
+        property: r'price',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      phoneStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'phone',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      phoneEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'phone',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      phoneContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'phone',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      phoneMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'phone',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      phoneIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'phone',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterFilterCondition>
-      phoneIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'phone',
-        value: '',
+        epsilon: epsilon,
       ));
     });
   }
 }
 
-extension CustomerModelQueryObject
-    on QueryBuilder<CustomerModel, CustomerModel, QFilterCondition> {}
+extension ServiceModelQueryObject
+    on QueryBuilder<ServiceModel, ServiceModel, QFilterCondition> {}
 
-extension CustomerModelQueryLinks
-    on QueryBuilder<CustomerModel, CustomerModel, QFilterCondition> {}
+extension ServiceModelQueryLinks
+    on QueryBuilder<ServiceModel, ServiceModel, QFilterCondition> {}
 
-extension CustomerModelQuerySortBy
-    on QueryBuilder<CustomerModel, CustomerModel, QSortBy> {
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> sortByCategory() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'category', Sort.asc);
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy>
-      sortByCategoryDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'category', Sort.desc);
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> sortByCreatedAt() {
+extension ServiceModelQuerySortBy
+    on QueryBuilder<ServiceModel, ServiceModel, QSortBy> {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> sortByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy>
-      sortByCreatedAtDesc() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> sortByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> sortByDeviceName() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> sortByDeviceName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'deviceName', Sort.asc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy>
       sortByDeviceNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'deviceName', Sort.desc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy>
-      sortByDiscountPercentage() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'discountPercentage', Sort.asc);
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy>
-      sortByDiscountPercentageDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'discountPercentage', Sort.desc);
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> sortByName() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> sortByNameDesc() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> sortByPhone() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> sortByPrice() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'phone', Sort.asc);
+      return query.addSortBy(r'price', Sort.asc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> sortByPhoneDesc() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> sortByPriceDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'phone', Sort.desc);
+      return query.addSortBy(r'price', Sort.desc);
     });
   }
 }
 
-extension CustomerModelQuerySortThenBy
-    on QueryBuilder<CustomerModel, CustomerModel, QSortThenBy> {
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> thenByCategory() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'category', Sort.asc);
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy>
-      thenByCategoryDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'category', Sort.desc);
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> thenByCreatedAt() {
+extension ServiceModelQuerySortThenBy
+    on QueryBuilder<ServiceModel, ServiceModel, QSortThenBy> {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> thenByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy>
-      thenByCreatedAtDesc() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> thenByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> thenByDeviceName() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> thenByDeviceName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'deviceName', Sort.asc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy>
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy>
       thenByDeviceNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'deviceName', Sort.desc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy>
-      thenByDiscountPercentage() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'discountPercentage', Sort.asc);
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy>
-      thenByDiscountPercentageDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'discountPercentage', Sort.desc);
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> thenById() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> thenByName() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> thenByNameDesc() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> thenByPhone() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> thenByPrice() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'phone', Sort.asc);
+      return query.addSortBy(r'price', Sort.asc);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QAfterSortBy> thenByPhoneDesc() {
+  QueryBuilder<ServiceModel, ServiceModel, QAfterSortBy> thenByPriceDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'phone', Sort.desc);
+      return query.addSortBy(r'price', Sort.desc);
     });
   }
 }
 
-extension CustomerModelQueryWhereDistinct
-    on QueryBuilder<CustomerModel, CustomerModel, QDistinct> {
-  QueryBuilder<CustomerModel, CustomerModel, QDistinct> distinctByCategory() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'category');
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QDistinct> distinctByCreatedAt() {
+extension ServiceModelQueryWhereDistinct
+    on QueryBuilder<ServiceModel, ServiceModel, QDistinct> {
+  QueryBuilder<ServiceModel, ServiceModel, QDistinct> distinctByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'createdAt');
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QDistinct> distinctByDeviceName(
+  QueryBuilder<ServiceModel, ServiceModel, QDistinct> distinctByDeviceName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'deviceName', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QDistinct>
-      distinctByDiscountPercentage() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'discountPercentage');
-    });
-  }
-
-  QueryBuilder<CustomerModel, CustomerModel, QDistinct> distinctByName(
+  QueryBuilder<ServiceModel, ServiceModel, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerModel, QDistinct> distinctByPhone(
-      {bool caseSensitive = true}) {
+  QueryBuilder<ServiceModel, ServiceModel, QDistinct> distinctByPrice() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'phone', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'price');
     });
   }
 }
 
-extension CustomerModelQueryProperty
-    on QueryBuilder<CustomerModel, CustomerModel, QQueryProperty> {
-  QueryBuilder<CustomerModel, int, QQueryOperations> idProperty() {
+extension ServiceModelQueryProperty
+    on QueryBuilder<ServiceModel, ServiceModel, QQueryProperty> {
+  QueryBuilder<ServiceModel, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<CustomerModel, CustomerCategory, QQueryOperations>
-      categoryProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'category');
-    });
-  }
-
-  QueryBuilder<CustomerModel, DateTime, QQueryOperations> createdAtProperty() {
+  QueryBuilder<ServiceModel, DateTime, QQueryOperations> createdAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdAt');
     });
   }
 
-  QueryBuilder<CustomerModel, String?, QQueryOperations> deviceNameProperty() {
+  QueryBuilder<ServiceModel, String?, QQueryOperations> deviceNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'deviceName');
     });
   }
 
-  QueryBuilder<CustomerModel, double, QQueryOperations>
-      discountPercentageProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'discountPercentage');
-    });
-  }
-
-  QueryBuilder<CustomerModel, String, QQueryOperations> nameProperty() {
+  QueryBuilder<ServiceModel, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
     });
   }
 
-  QueryBuilder<CustomerModel, String?, QQueryOperations> phoneProperty() {
+  QueryBuilder<ServiceModel, double, QQueryOperations> priceProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'phone');
+      return query.addPropertyName(r'price');
     });
   }
 }

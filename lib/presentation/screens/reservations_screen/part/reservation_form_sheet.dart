@@ -26,6 +26,7 @@ class _ReservationFormSheetState extends ConsumerState<ReservationFormSheet> {
   int? _tableId;
   int? _customerId;
   int? _employeeId;
+  int? _serviceId;
   bool _isSaving = false;
 
   @override
@@ -36,6 +37,7 @@ class _ReservationFormSheetState extends ConsumerState<ReservationFormSheet> {
     _tableId = existing?.tableId;
     _customerId = existing?.customerId;
     _employeeId = existing?.employeeId;
+    _serviceId = existing?.serviceId;
     _start = existing?.startTime ?? widget.initialStart ?? DateTime.now();
     _end = existing?.endTime ?? _start.add(const Duration(hours: 1));
   }
@@ -60,6 +62,7 @@ class _ReservationFormSheetState extends ConsumerState<ReservationFormSheet> {
         title: _titleCtrl.text.trim(),
         customerId: _customerId,
         employeeId: _employeeId,
+        serviceId: _serviceId,
         start: _start,
         end: _end,
       );
@@ -122,6 +125,10 @@ class _ReservationFormSheetState extends ConsumerState<ReservationFormSheet> {
           ReservationEmployeePicker(
             employeeId: _employeeId,
             onChanged: (id) => setState(() => _employeeId = id),
+          ),
+          ReservationServicePicker(
+            serviceId: _serviceId,
+            onChanged: (id) => setState(() => _serviceId = id),
           ),
           const Divider(),
           ReservationTimeRangeRow(

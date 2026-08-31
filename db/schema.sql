@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS game_tables (
     max_users       INTEGER        CHECK (max_users IS NULL OR max_users > 0),
     status          TEXT           NOT NULL DEFAULT 'available'
                                    CHECK (status IN ('available', 'active')),
-    created_at      TIMESTAMPTZ    NOT NULL DEFAULT now()
+    created_at      TIMESTAMPTZ    NOT NULL DEFAULT now(),
+    device_name     TEXT
 );
 
 -- Isar-daky @Index(unique: true, caseSensitive: false) ekwiwalenti
@@ -30,7 +31,10 @@ CREATE TABLE IF NOT EXISTS customers (
     discount_percentage NUMERIC(5, 2) NOT NULL DEFAULT 0
                                       CHECK (discount_percentage BETWEEN 0 AND 100),
     phone               TEXT,
-    created_at          TIMESTAMPTZ   NOT NULL DEFAULT now()
+    category            CHAR(1)       NOT NULL DEFAULT 'A'
+                                      CHECK (category IN ('A', 'B', 'C')),
+    created_at          TIMESTAMPTZ   NOT NULL DEFAULT now(),
+    device_name         TEXT
 );
 
 -- ── Işgärler (EmployeeModel) ────────────────────────────────
@@ -38,10 +42,17 @@ CREATE TABLE IF NOT EXISTS employees (
     id          BIGSERIAL PRIMARY KEY,
     name        TEXT        NOT NULL UNIQUE,
     phone       TEXT,
-    category    CHAR(1)     NOT NULL DEFAULT 'A'
-                            CHECK (category IN ('A', 'B', 'C')),
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    job_position TEXT       NOT NULL DEFAULT 'manager'
+                            CHECK (job_position IN ('manager', 'cashier',
+                                                    'operator', 'director')),
+    -- Bronda diňe 'type2' saýlanyp bilinýär (direktordan başga)
+    employee_type TEXT      NOT NULL DEFAULT 'type1'
+                            CHECK (employee_type IN ('type1', 'type2')),
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+    device_name TEXT
 );
+
+CREATE INDEX IF NOT EXISTS employees_type_idx ON employees (employee_type);
 
 -- ── Oýunçy sessiýalary (PlayerSessionModel) ─────────────────
 CREATE TABLE IF NOT EXISTS player_sessions (
@@ -61,6 +72,7 @@ CREATE TABLE IF NOT EXISTS player_sessions (
     customer_id          BIGINT         REFERENCES customers (id) ON DELETE SET NULL,
     discount_percentage  NUMERIC(5, 2)  NOT NULL DEFAULT 0,
     reminder_minutes     INTEGER,
+    device_name          TEXT,
     CHECK (end_time IS NULL OR end_time >= start_time)
 );
 
@@ -84,7 +96,8 @@ CREATE TABLE IF NOT EXISTS history_logs (
     total_price         NUMERIC(12, 2) NOT NULL,
     discount_percentage NUMERIC(5, 2),
     discount_amount     NUMERIC(12, 2),
-    created_at          TIMESTAMPTZ    NOT NULL DEFAULT now()
+    created_at          TIMESTAMPTZ    NOT NULL DEFAULT now(),
+    device_name         TEXT
 );
 
 CREATE INDEX IF NOT EXISTS history_logs_table_id_idx  ON history_logs (table_id);
@@ -104,6 +117,7 @@ CREATE TABLE IF NOT EXISTS reservations (
     status      TEXT        NOT NULL DEFAULT 'pending'
                             CHECK (status IN ('pending', 'started')),
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+    device_name TEXT,
     CHECK (end_time > start_time),
     -- Bir stolda bronlar wagt boýunça gabat gelip bilmez.
     -- Programmadaky barlagyň bazadaky kepili.

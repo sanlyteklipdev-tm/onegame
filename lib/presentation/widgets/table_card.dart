@@ -7,6 +7,7 @@ import '../../core/utils/formatters.dart';
 import '../../core/utils/price_calculator.dart';
 import '../../data/models/table_model.dart';
 import '../providers/providers.dart';
+import 'device_chip.dart';
 
 class TableCard extends ConsumerWidget {
   final TableModel table;
@@ -171,14 +172,29 @@ class TableCard extends ConsumerWidget {
               const SizedBox(height: 4),
 
               // ── Ýagdaý teksti ─────────────────────────────
-              Text(
-                isActive ? S.of(context).active : S.of(context).available,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: isActive
-                      ? scheme.primary
-                      : scheme.onSurfaceVariant.withAlpha(153), // 0.6 * 255
-                  fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                ),
+              Row(
+                children: [
+                  Text(
+                    isActive ? S.of(context).active : S.of(context).available,
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: isActive
+                          ? scheme.primary
+                          : scheme.onSurfaceVariant.withAlpha(153),
+                      fontWeight: isActive
+                          ? FontWeight.w600
+                          : FontWeight.w400,
+                    ),
+                  ),
+                  if (table.deviceName != null) ...[
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: DeviceChip(
+                        deviceName: table.deviceName,
+                        dense: true,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ],
           ),

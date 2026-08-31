@@ -9,6 +9,8 @@ import '../../core/utils/price_calculator.dart';
 /// Sessiýa repository interfeýsi
 abstract class SessionRepository {
   Future<List<PlayerSessionModel>> getActiveSessions(int tableId);
+  Future<PlayerSessionModel?> getSessionById(int sessionId);
+  Future<void> setReminderMinutes(int sessionId, int? minutes);
   Future<List<PlayerSessionModel>> getFinishedSessions(
     int tableId, {
     int limit,
@@ -67,6 +69,20 @@ class IsarSessionRepository implements SessionRepository {
         .statusEqualTo(SessionStatus.active)
         .sortByStartTime()
         .findAll();
+  }
+
+  @override
+  Future<PlayerSessionModel?> getSessionById(int sessionId) =>
+      _db.playerSessionModels.get(sessionId);
+
+  @override
+  Future<void> setReminderMinutes(int sessionId, int? minutes) async {
+    await _db.writeTxn(() async {
+      final session = await _db.playerSessionModels.get(sessionId);
+      if (session == null) return;
+      session.reminderMinutes = minutes;
+      await _db.playerSessionModels.put(session);
+    });
   }
 
   @override

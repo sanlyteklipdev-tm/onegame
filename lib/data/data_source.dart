@@ -10,8 +10,8 @@ enum DataSource { isar, postgres }
 class DataSourceConfig {
   DataSourceConfig._();
 
-  /// Häzirki çeşme. Postgres synagy üçin `DataSource.postgres` ediň.
-  static const DataSource current = DataSource.isar;
+  /// Häzirki çeşme. Isar-a dolanmak üçin `DataSource.isar` ediň.
+  static const DataSource current = DataSource.postgres;
 
   static bool get usePostgres => current == DataSource.postgres;
 }

@@ -8,6 +8,7 @@ import '../models/app_settings_model.dart';
 import '../models/customer_model.dart';
 import '../models/employee_model.dart';
 import '../models/reservation_model.dart';
+import '../models/service_model.dart';
 
 /// Isar database singleton servisi
 class IsarService {
@@ -34,6 +35,7 @@ class IsarService {
         CustomerModelSchema,
         ReservationModelSchema,
         EmployeeModelSchema,
+        ServiceModelSchema,
       ],
       directory: dir.path,
       name: 'billiard_db',

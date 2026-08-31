@@ -20,6 +20,24 @@ class PgSessionRepository implements SessionRepository {
   }
 
   @override
+  Future<PlayerSessionModel?> getSessionById(int sessionId) async {
+    final res = await PostgresService.query(
+      '$sessionSelect WHERE id = @id',
+      parameters: {'id': sessionId},
+    );
+    if (res.isEmpty) return null;
+    return mapSession(res.first.toColumnMap());
+  }
+
+  @override
+  Future<void> setReminderMinutes(int sessionId, int? minutes) async {
+    await PostgresService.query(
+      'UPDATE player_sessions SET reminder_minutes = @m WHERE id = @id',
+      parameters: {'m': minutes, 'id': sessionId},
+    );
+  }
+
+  @override
   Future<List<PlayerSessionModel>> getFinishedSessions(
     int tableId, {
     int limit = 20,
