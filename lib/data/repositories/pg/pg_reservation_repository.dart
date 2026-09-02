@@ -12,11 +12,17 @@ SELECT id, table_id, title, customer_id, employee_id, service_id,
 FROM reservations
 ''';
 
-String _statusToDb(ReservationStatus s) =>
-    s == ReservationStatus.started ? 'started' : 'pending';
+String _statusToDb(ReservationStatus s) => switch (s) {
+  ReservationStatus.started => 'started',
+  ReservationStatus.done => 'done',
+  ReservationStatus.pending => 'pending',
+};
 
-ReservationStatus _statusFromDb(String s) =>
-    s == 'started' ? ReservationStatus.started : ReservationStatus.pending;
+ReservationStatus _statusFromDb(String s) => switch (s) {
+  'started' => ReservationStatus.started,
+  'done' => ReservationStatus.done,
+  _ => ReservationStatus.pending,
+};
 
 ReservationModel _map(Map<String, dynamic> row) => ReservationModel()
   ..id = row['id'] as int
@@ -132,6 +138,32 @@ class PgReservationRepository implements ReservationRepository {
     final id = res.first.toColumnMap()['id'] as int;
     reservation.id = id;
     return id;
+  }
+
+  @override
+  Stream<List<ReservationModel>> watchForEmployee(
+    int employeeId, {
+    required DateTime from,
+  }) {
+    return pollingStream(() async {
+      final res = await PostgresService.query(
+        '''
+        $_select
+        WHERE employee_id = @e AND end_time > @from
+        ORDER BY start_time
+        ''',
+        parameters: {'e': employeeId, 'from': from},
+      );
+      return res.map((r) => _map(r.toColumnMap())).toList();
+    });
+  }
+
+  @override
+  Future<void> markDone(int id) async {
+    await PostgresService.query(
+      "UPDATE reservations SET status = 'done' WHERE id = @id",
+      parameters: {'id': id},
+    );
   }
 
   @override

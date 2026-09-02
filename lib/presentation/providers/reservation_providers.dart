@@ -2,8 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/utils/formatters.dart';
 import '../../data/models/reservation_model.dart';
+import '../../data/models/service_model.dart';
 import '../../data/models/table_model.dart';
 import '../../data/data_source.dart';
+import 'auth_providers.dart';
 import 'providers.dart';
 import '../../data/repositories/pg/pg_reservation_repository.dart';
 import '../../data/repositories/reservation_repository.dart';
@@ -104,11 +106,21 @@ class ReservationNotifier extends AsyncNotifier<void> {
 
   Future<void> markStarted(int id) => _repo.markStarted(id);
 
+  Future<void> markDone(int id) => _repo.markDone(id);
+
   Future<void> delete(int id) => _repo.delete(id);
 }
 
 final reservationNotifierProvider =
     AsyncNotifierProvider<ReservationNotifier, void>(ReservationNotifier.new);
+
+/// Bronda görkezmek üçin hyzmat atlary: {serviceId: at}
+final serviceNamesProvider = Provider<Map<int, String>>((ref) {
+  final services = ref
+      .watch(servicesStreamProvider)
+      .maybeWhen(data: (x) => x, orElse: () => <ServiceModel>[]);
+  return {for (final x in services) x.id: x.name};
+});
 
 /// Bronda görkezmek üçin stol atlary: {tableId: at}
 /// Stollar repository arkaly alynýar — çeşme Isar ýa-da Postgres bolup biler.
@@ -117,4 +129,20 @@ final tableNamesProvider = Provider<Map<int, String>>((ref) {
       .watch(tablesStreamProvider)
       .maybeWhen(data: (t) => t, orElse: () => <TableModel>[]);
   return {for (final t in tables) t.id: t.name};
+});
+
+// ── Işgäriň öz bronlary ─────────────────────────────────────
+
+/// Giren işgäriň gutarmadyk bronlary — wagt boýunça tertipde.
+/// Hasaba işgär baglanmadyk bolsa boş sanaw gaýtarýar.
+final myReservationsProvider = StreamProvider<List<ReservationModel>>((ref) {
+  final employeeId = ref.watch(currentEmployeeIdProvider);
+  if (employeeId == null) return Stream.value(const []);
+
+  final repo = ref.watch(reservationRepositoryProvider);
+  // Gündüziň başyndan — şu gün eýýäm geçen bronlar hem görünsin
+  return repo.watchForEmployee(
+    employeeId,
+    from: AppFormatters.startOfDay(DateTime.now()),
+  );
 });

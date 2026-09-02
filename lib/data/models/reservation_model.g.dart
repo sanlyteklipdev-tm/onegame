@@ -42,39 +42,44 @@ const ReservationModelSchema = CollectionSchema(
       name: r'endTime',
       type: IsarType.dateTime,
     ),
-    r'isPending': PropertySchema(
+    r'isDone': PropertySchema(
       id: 5,
+      name: r'isDone',
+      type: IsarType.bool,
+    ),
+    r'isPending': PropertySchema(
+      id: 6,
       name: r'isPending',
       type: IsarType.bool,
     ),
     r'isStarted': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'isStarted',
       type: IsarType.bool,
     ),
     r'serviceId': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'serviceId',
       type: IsarType.long,
     ),
     r'startTime': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'startTime',
       type: IsarType.dateTime,
     ),
     r'status': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'status',
       type: IsarType.byte,
       enumMap: _ReservationModelstatusEnumValueMap,
     ),
     r'tableId': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'tableId',
       type: IsarType.long,
     ),
     r'title': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'title',
       type: IsarType.string,
     )
@@ -147,13 +152,14 @@ void _reservationModelSerialize(
   writer.writeString(offsets[2], object.deviceName);
   writer.writeLong(offsets[3], object.employeeId);
   writer.writeDateTime(offsets[4], object.endTime);
-  writer.writeBool(offsets[5], object.isPending);
-  writer.writeBool(offsets[6], object.isStarted);
-  writer.writeLong(offsets[7], object.serviceId);
-  writer.writeDateTime(offsets[8], object.startTime);
-  writer.writeByte(offsets[9], object.status.index);
-  writer.writeLong(offsets[10], object.tableId);
-  writer.writeString(offsets[11], object.title);
+  writer.writeBool(offsets[5], object.isDone);
+  writer.writeBool(offsets[6], object.isPending);
+  writer.writeBool(offsets[7], object.isStarted);
+  writer.writeLong(offsets[8], object.serviceId);
+  writer.writeDateTime(offsets[9], object.startTime);
+  writer.writeByte(offsets[10], object.status.index);
+  writer.writeLong(offsets[11], object.tableId);
+  writer.writeString(offsets[12], object.title);
 }
 
 ReservationModel _reservationModelDeserialize(
@@ -169,13 +175,13 @@ ReservationModel _reservationModelDeserialize(
   object.employeeId = reader.readLongOrNull(offsets[3]);
   object.endTime = reader.readDateTime(offsets[4]);
   object.id = id;
-  object.serviceId = reader.readLongOrNull(offsets[7]);
-  object.startTime = reader.readDateTime(offsets[8]);
+  object.serviceId = reader.readLongOrNull(offsets[8]);
+  object.startTime = reader.readDateTime(offsets[9]);
   object.status =
-      _ReservationModelstatusValueEnumMap[reader.readByteOrNull(offsets[9])] ??
+      _ReservationModelstatusValueEnumMap[reader.readByteOrNull(offsets[10])] ??
           ReservationStatus.pending;
-  object.tableId = reader.readLong(offsets[10]);
-  object.title = reader.readString(offsets[11]);
+  object.tableId = reader.readLong(offsets[11]);
+  object.title = reader.readString(offsets[12]);
   return object;
 }
 
@@ -201,16 +207,18 @@ P _reservationModelDeserializeProp<P>(
     case 6:
       return (reader.readBool(offset)) as P;
     case 7:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 8:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 9:
+      return (reader.readDateTime(offset)) as P;
+    case 10:
       return (_ReservationModelstatusValueEnumMap[
               reader.readByteOrNull(offset)] ??
           ReservationStatus.pending) as P;
-    case 10:
-      return (reader.readLong(offset)) as P;
     case 11:
+      return (reader.readLong(offset)) as P;
+    case 12:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -220,10 +228,12 @@ P _reservationModelDeserializeProp<P>(
 const _ReservationModelstatusEnumValueMap = {
   'pending': 0,
   'started': 1,
+  'done': 2,
 };
 const _ReservationModelstatusValueEnumMap = {
   0: ReservationStatus.pending,
   1: ReservationStatus.started,
+  2: ReservationStatus.done,
 };
 
 Id _reservationModelGetId(ReservationModel object) {
@@ -993,6 +1003,16 @@ extension ReservationModelQueryFilter
   }
 
   QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
+      isDoneEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isDone',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterFilterCondition>
       isPendingEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1470,6 +1490,20 @@ extension ReservationModelQuerySortBy
   }
 
   QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
+      sortByIsDone() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDone', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
+      sortByIsDoneDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDone', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
       sortByIsPending() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isPending', Sort.asc);
@@ -1653,6 +1687,20 @@ extension ReservationModelQuerySortThenBy
   }
 
   QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
+      thenByIsDone() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDone', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
+      thenByIsDoneDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDone', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QAfterSortBy>
       thenByIsPending() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isPending', Sort.asc);
@@ -1788,6 +1836,13 @@ extension ReservationModelQueryWhereDistinct
   }
 
   QueryBuilder<ReservationModel, ReservationModel, QDistinct>
+      distinctByIsDone() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isDone');
+    });
+  }
+
+  QueryBuilder<ReservationModel, ReservationModel, QDistinct>
       distinctByIsPending() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isPending');
@@ -1874,6 +1929,12 @@ extension ReservationModelQueryProperty
   QueryBuilder<ReservationModel, DateTime, QQueryOperations> endTimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'endTime');
+    });
+  }
+
+  QueryBuilder<ReservationModel, bool, QQueryOperations> isDoneProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isDone');
     });
   }
 

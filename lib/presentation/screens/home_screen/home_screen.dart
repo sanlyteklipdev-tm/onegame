@@ -1,15 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/app_localizations.dart';
-import '../tables_screen/tables_screen.dart';
-import '../reports_screen/reports_screen.dart';
-import '../reservations_screen/reservations_screen.dart';
-import '../settings_screen/settings_screen.dart';
-import '../customers_screen/customers_screen.dart';
-import '../employees_screen/employees_screen.dart';
-import '../services_screen/services_screen.dart';
+import '../../../core/services/auth_service.dart';
+import '../../../data/data_source.dart';
+import '../../providers/auth_providers.dart';
+import '../worker_screen/worker_screen.dart';
+import 'part/home_destinations.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -21,97 +18,31 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
-    const TablesScreen(),
-    const ReservationsScreen(),
-    const CustomersScreen(),
-    const EmployeesScreen(),
-    const ServicesScreen(),
-    const ReportsScreen(),
-    const SettingsScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final role = ref.watch(currentRoleProvider);
+
+    // Isar rejiminde giriş ýok — hemme zat elýeterli
+    final effectiveRole = DataSourceConfig.usePostgres
+        ? role
+        : AppRole.admin;
+
+    // Giriş entek gutarmadyk bolsa garaşylýar
+    if (effectiveRole == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    // Işgäriň öz ekrany — menýusyz
+    if (effectiveRole.isWorker) return const WorkerScreen();
+
+    final tabs = buildHomeTabs(s, effectiveRole);
+
+    // Rol çalşanda saýlanan bölüm sanawdan çykmaz ýaly
+    final index = _selectedIndex.clamp(0, tabs.length - 1);
+
     final width = MediaQuery.sizeOf(context).width;
     final isTablet = width >= 600;
-
-    final destinations = [
-      NavigationDestination(
-        icon: const Icon(CupertinoIcons.house),
-        selectedIcon: const Icon(CupertinoIcons.house_fill),
-        label: s.tables,
-      ),
-      NavigationDestination(
-        icon: const Icon(CupertinoIcons.calendar),
-        selectedIcon: const Icon(CupertinoIcons.calendar_today),
-        label: s.reservations,
-      ),
-      NavigationDestination(
-        icon: const Icon(CupertinoIcons.person_2),
-        selectedIcon: const Icon(CupertinoIcons.person_2_fill),
-        label: s.customers,
-      ),
-      NavigationDestination(
-        icon: const Icon(CupertinoIcons.briefcase),
-        selectedIcon: const Icon(CupertinoIcons.briefcase_fill),
-        label: s.employees,
-      ),
-      NavigationDestination(
-        icon: const Icon(CupertinoIcons.sparkles),
-        selectedIcon: const Icon(CupertinoIcons.sparkles),
-        label: s.services,
-      ),
-      NavigationDestination(
-        icon: const Icon(CupertinoIcons.graph_square),
-        selectedIcon: const Icon(CupertinoIcons.graph_square_fill),
-        label: s.reports,
-      ),
-      NavigationDestination(
-        icon: const Icon(CupertinoIcons.settings),
-        selectedIcon: const Icon(CupertinoIcons.settings_solid),
-        label: s.settings,
-      ),
-    ];
-
-    final railDestinations = [
-      NavigationRailDestination(
-        icon: const Icon(CupertinoIcons.house),
-        selectedIcon: const Icon(CupertinoIcons.house_fill),
-        label: Text(s.tables),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(CupertinoIcons.calendar),
-        selectedIcon: const Icon(CupertinoIcons.calendar_today),
-        label: Text(s.reservations),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(CupertinoIcons.person_2),
-        selectedIcon: const Icon(CupertinoIcons.person_2_fill),
-        label: Text(s.customers),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(CupertinoIcons.briefcase),
-        selectedIcon: const Icon(CupertinoIcons.briefcase_fill),
-        label: Text(s.employees),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(CupertinoIcons.sparkles),
-        selectedIcon: const Icon(CupertinoIcons.sparkles),
-        label: Text(s.services),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(CupertinoIcons.graph_square),
-        selectedIcon: const Icon(CupertinoIcons.graph_square_fill),
-        label: Text(s.reports),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(CupertinoIcons.settings),
-        selectedIcon: const Icon(CupertinoIcons.settings_solid),
-        label: Text(s.settings),
-      ),
-    ];
 
     if (isTablet) {
       // ── Planşet ─────────────── NavigationRail + Screen
@@ -119,20 +50,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         body: Row(
           children: [
             NavigationRail(
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: (index) {
-                setState(() => _selectedIndex = index);
-              },
+              selectedIndex: index,
+              onDestinationSelected: (i) =>
+                  setState(() => _selectedIndex = i),
               labelType: width >= 800
                   ? NavigationRailLabelType.all
                   : NavigationRailLabelType.selected,
-              destinations: railDestinations,
+              destinations: [
+                for (final t in tabs)
+                  NavigationRailDestination(
+                    icon: Icon(t.icon),
+                    selectedIcon: Icon(t.selectedIcon),
+                    label: Text(t.label),
+                  ),
+              ],
               leading: const SizedBox(height: 16),
             ),
             const VerticalDivider(width: 1),
-            Expanded(
-              child: _screens[_selectedIndex],
-            ),
+            Expanded(child: tabs[index].screen),
           ],
         ),
       );
@@ -140,16 +75,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     // ── Telefon ─────────────── BottomNavigationBar
     return Scaffold(
-      body: _screens[_selectedIndex],
-      // Ulgamyň şrift ulaltmasy 6 bölümiň ýazgysyny kesmez ýaly çäklendirilýär
+      body: tabs[index].screen,
+      // Ulgamyň şrift ulaltmasy bölümleriň ýazgysyny kesmez ýaly çäklendirilýär
       bottomNavigationBar: MediaQuery.withClampedTextScaling(
         maxScaleFactor: 1.0,
         child: NavigationBar(
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: (index) {
-            setState(() => _selectedIndex = index);
-          },
-          destinations: destinations,
+          selectedIndex: index,
+          onDestinationSelected: (i) => setState(() => _selectedIndex = i),
+          destinations: [
+            for (final t in tabs)
+              NavigationDestination(
+                icon: Icon(t.icon),
+                selectedIcon: Icon(t.selectedIcon),
+                label: t.label,
+              ),
+          ],
         ),
       ),
     );

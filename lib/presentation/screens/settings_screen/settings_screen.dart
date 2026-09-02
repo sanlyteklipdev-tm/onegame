@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/app_localizations.dart';
+import 'part/account_card.dart';
 import 'part/appearance_card.dart';
 import 'part/database_card.dart';
 import 'part/manage_tables_section.dart';
@@ -33,10 +34,22 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
 
-            // ── Daşky görnüş (Tema we Dil) ─────────────────────
+            // ── Hasap ──────────────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child: Text(
+                  s.account,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: AccountCard()),
+
+            // ── Daşky görnüş (Tema we Dil) ─────────────────────
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 10),
                 child: Text(
                   s.appearance,
                   style: Theme.of(context).textTheme.titleMedium,

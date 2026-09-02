@@ -7,30 +7,47 @@ import 'postgres_config.dart';
 
 /// PostgreSQL birikmesini dolandyrýan singleton.
 ///
-/// Birikme ýitse, indiki sorag awtomatiki täzeden açýar.
+/// Ulanyjynyň ady we paroly girişde berilýär — programmanyň içinde
+/// saklanmaýar. Şonuň üçin hukuklary bazanyň özi barlaýar:
+/// işgäriň programmasy hasabatlary okap bilmeýär, sebäbi baza
+/// rugsat bermeýär, programma "gizleýändigi" üçin däl.
 class PostgresService {
   PostgresService._();
 
   static Connection? _connection;
   static Future<Connection>? _opening;
 
-  /// Taýýar birikme. Gerek bolsa özi açýar.
+  static String? _username;
+  static String? _password;
+
+  /// Häzir kim girdi. Girilmedik bolsa `null`.
+  static String? get currentUser => _username;
+
+  static bool get isSignedIn => _username != null && _password != null;
+
+  /// Taýýar birikme. Birikme ýitse özi täzeden açýar.
   static Future<Connection> get connection async {
     final existing = _connection;
     if (existing != null && existing.isOpen) return existing;
 
+    final user = _username;
+    final pass = _password;
+    if (user == null || pass == null) {
+      throw StateError('PostgreSQL: girilmedik — öňürti signIn çagyrylmaly');
+    }
+
     // Bir wagtda birnäçe sorag gelse, diňe bir birikme açylsyn
-    return _opening ??= _open().whenComplete(() => _opening = null);
+    return _opening ??= _open(user, pass).whenComplete(() => _opening = null);
   }
 
-  static Future<Connection> _open() async {
+  static Future<Connection> _open(String username, String password) async {
     final conn = await Connection.open(
       Endpoint(
         host: PostgresConfig.effectiveHost,
         port: PostgresConfig.port,
         database: PostgresConfig.database,
-        username: PostgresConfig.username,
-        password: PostgresConfig.password,
+        username: username,
+        password: password,
       ),
       settings: const ConnectionSettings(
         // Lokal bazada SSL sazlanmadyk
@@ -39,8 +56,27 @@ class PostgresService {
       ),
     );
     _connection = conn;
-    dev.log('PostgreSQL: connected to ${PostgresConfig.database}');
+    dev.log('PostgreSQL: $username connected to ${PostgresConfig.database}');
     return conn;
+  }
+
+  /// Girişi barlaýar. Şowsuz bolsa ýalňyşlyk zyňýar we
+  /// öňki ýagdaý üýtgemän galýar.
+  static Future<void> signIn({
+    required String username,
+    required String password,
+  }) async {
+    await close();
+    // Ýalňyş parol bolsa şu ýerde ýalňyşlyk zyňylýar
+    await _open(username, password);
+    _username = username;
+    _password = password;
+  }
+
+  static Future<void> signOut() async {
+    await close();
+    _username = null;
+    _password = null;
   }
 
   /// Birikmäniň barlagy — sazlamalar ekranynda ulanmak üçin amatly

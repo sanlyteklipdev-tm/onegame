@@ -21,6 +21,17 @@ abstract class ReservationRepository {
 
   Future<int> save(ReservationModel reservation);
   Future<void> markStarted(int id);
+
+  /// Işgär brony ýerine ýetirdi diýip belleýär
+  Future<void> markDone(int id);
+
+  /// Bir işgäriň bronlary — [from] pursadyndan soň başlaýanlar.
+  /// Işgäriň ekrany diňe şulary görkezýär.
+  Stream<List<ReservationModel>> watchForEmployee(
+    int employeeId, {
+    required DateTime from,
+  });
+
   Future<void> delete(int id);
 }
 
@@ -80,6 +91,29 @@ class IsarReservationRepository implements ReservationRepository {
       r.status = ReservationStatus.started;
       await _db.reservationModels.put(r);
     });
+  }
+
+  @override
+  Future<void> markDone(int id) async {
+    await _db.writeTxn(() async {
+      final r = await _db.reservationModels.get(id);
+      if (r == null) return;
+      r.status = ReservationStatus.done;
+      await _db.reservationModels.put(r);
+    });
+  }
+
+  @override
+  Stream<List<ReservationModel>> watchForEmployee(
+    int employeeId, {
+    required DateTime from,
+  }) {
+    return _db.reservationModels
+        .filter()
+        .employeeIdEqualTo(employeeId)
+        .endTimeGreaterThan(from)
+        .sortByStartTime()
+        .watch(fireImmediately: true);
   }
 
   @override

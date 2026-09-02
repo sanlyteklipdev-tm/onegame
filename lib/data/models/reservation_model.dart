@@ -9,6 +9,9 @@ enum ReservationStatus {
 
   /// Bron boýunça stol başladyldy
   started,
+
+  /// Işgär brony ýerine ýetirdi diýip belledi
+  done,
 }
 
 /// Stol brony — geljekki wagt üçin ýazgy.
@@ -73,6 +76,7 @@ class ReservationModel {
 
   bool get isPending => status == ReservationStatus.pending;
   bool get isStarted => status == ReservationStatus.started;
+  bool get isDone => status == ReservationStatus.done;
 
   @ignore
   Duration get duration => endTime.difference(startTime);

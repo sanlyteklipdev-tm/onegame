@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/l10n/app_localizations.dart';
 import '../../../core/services/activation_api_service.dart';
 import '../../../core/services/activation_cache_service.dart';
+import '../../../data/data_source.dart';
 import '../../providers/providers.dart';
 import '../home_screen/home_screen.dart';
 import '../login_screen/login_screen.dart';
+import '../sign_in_screen/sign_in_screen.dart';
 import '../waiting_activation_screen/waiting_activation_screen.dart';
 
 class ActivationGateScreen extends ConsumerStatefulWidget {
@@ -26,6 +28,12 @@ class _ActivationGateScreenState extends ConsumerState<ActivationGateScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkStatus());
   }
 
+  /// Aktiwleşdirmeden soň nirä geçmeli.
+  /// Postgres rejiminde her adam öz hasaby bilen girýär,
+  /// Isar rejiminde welin giriş gerek däl — baza enjamyň özünde.
+  Widget _afterActivation() =>
+      DataSourceConfig.usePostgres ? const SignInScreen() : const HomeScreen();
+
   Future<void> _checkStatus() async {
     setState(() => _errorText = null);
 
@@ -37,7 +45,7 @@ class _ActivationGateScreenState extends ConsumerState<ActivationGateScreen> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) => status == DeviceActivationStatus.active
-              ? const HomeScreen()
+              ? _afterActivation()
               : const WaitingActivationScreen(),
         ),
       );
@@ -54,7 +62,7 @@ class _ActivationGateScreenState extends ConsumerState<ActivationGateScreen> {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (_) =>
-                cached ? const HomeScreen() : const WaitingActivationScreen(),
+                cached ? _afterActivation() : const WaitingActivationScreen(),
           ),
         );
       } else {

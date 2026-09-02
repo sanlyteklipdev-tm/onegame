@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/models/employee_model.dart';
+import '../services/auth_service.dart';
 
 /// Goldanýan diller
 enum AppLanguage { system, tk, ru, en }
@@ -124,6 +125,72 @@ class S {
     EmployeePosition.director => _t('Direktor', 'Директор', 'Director'),
   };
   String get noEmployee => _t('Işgärsiz', 'Без сотрудника', 'No staff');
+
+  // ── Işgäriň ekrany ─────────────────────────────────────
+  String get myBookings => _t('Meniň bronlarym', 'Мои брони', 'My bookings');
+  String get markDone =>
+      _t('Ýerine ýetirildi', 'Выполнено', 'Mark done');
+  String get statusPending => _t('Garaşylýar', 'Ожидает', 'Pending');
+  String get statusStarted => _t('Başladyldy', 'Начата', 'Started');
+  String get statusDone => _t('Ýerine ýetirildi', 'Выполнено', 'Done');
+  String get noMyBookings =>
+      _t('Bron ýok', 'Броней нет', 'No bookings');
+  String get noMyBookingsHint => _t(
+    'Size bron bellenende şu ýerde görüner',
+    'Когда на вас назначат бронь, она появится здесь',
+    'Bookings assigned to you will appear here',
+  );
+  String get notLinkedToEmployee => _t(
+    'Bu hasap hiç işgäre baglanmadyk. Administratora ýüz tutuň',
+    'Эта учётная запись не привязана к сотруднику. Обратитесь к администратору',
+    'This account is not linked to a staff member. Contact the administrator',
+  );
+
+  // ── Giriş (Login) ──────────────────────────────────────
+  String get account => _t('Hasap', 'Учётная запись', 'Account');
+  String get signInTitle => _t('Ulgama giriş', 'Вход в систему', 'Sign in');
+  String get signInSubtitle => _t(
+    'Öz adyňyz we parolyňyz bilen giriň',
+    'Введите свой логин и пароль',
+    'Enter your username and password',
+  );
+  String get username => _t('Ulanyjy ady', 'Логин', 'Username');
+  String get password => _t('Parol', 'Пароль', 'Password');
+  String get signIn => _t('Gir', 'Войти', 'Sign in');
+  String get signOut => _t('Çyk', 'Выйти', 'Sign out');
+  String get signOutConfirm => _t(
+    'Ulgamdan çykmalymy?',
+    'Выйти из системы?',
+    'Sign out of the app?',
+  );
+  String get enterUsername =>
+      _t('Ulanyjy adyny ýazyň', 'Введите логин', 'Enter a username');
+  String get enterPassword =>
+      _t('Paroly ýazyň', 'Введите пароль', 'Enter a password');
+  String get errWrongCredentials => _t(
+    'Ulanyjy ady ýa parol ýalňyş',
+    'Неверный логин или пароль',
+    'Wrong username or password',
+  );
+  String get errDbUnreachable => _t(
+    'Baza birigip bolmady. Wi-Fi we kompýuter açykmy?',
+    'Нет связи с базой. Проверьте Wi-Fi и компьютер',
+    'Cannot reach the database. Check Wi-Fi and the computer',
+  );
+  String get errNoRole => _t(
+    'Bu hasaba rol berilmedik. Administratora ýüz tutuň',
+    'Этой учётной записи не назначена роль. Обратитесь к администратору',
+    'This account has no role assigned. Contact the administrator',
+  );
+  String get signedInAs =>
+      _t('Giren', 'Вы вошли как', 'Signed in as');
+
+  /// Rolyň ady
+  String roleLabel(AppRole r) => switch (r) {
+    AppRole.worker => _t('Ulanyjy', 'Пользователь', 'User'),
+    AppRole.manager => _t('Menejer', 'Менеджер', 'Manager'),
+    AppRole.admin => _t('Administrator', 'Администратор', 'Administrator'),
+  };
 
   String get employeeType => _t('Görnüş', 'Тип', 'Type');
 
