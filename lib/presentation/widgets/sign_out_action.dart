@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_localizations.dart';
+import '../../core/services/worker_notification_sync.dart';
 import '../providers/auth_providers.dart';
 import '../screens/sign_in_screen/sign_in_screen.dart';
 
@@ -35,6 +36,8 @@ Future<void> confirmSignOut(BuildContext context, WidgetRef ref) async {
 
   if (confirmed != true) return;
 
+  // Öňki adamyň duýduryşlary indiki girene barmaly däl
+  await WorkerNotificationSync.clear();
   await ref.read(authProvider.notifier).signOut();
   navigator.pushAndRemoveUntil(
     MaterialPageRoute(builder: (_) => const SignInScreen()),

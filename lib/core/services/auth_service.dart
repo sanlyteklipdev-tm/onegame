@@ -84,11 +84,13 @@ class AuthService {
     required String username,
     required String password,
   }) async {
+    // Bazadaky hasaplaryň atlary hemişe kiçi harp bilen. Telefonyň
+    // klawiaturasy ilkinji harpy uly edip goýberýär — şonuň üçin
+    // ady özümiz kiçeldýäris, ýogsam giriş sebäpsiz ret edilýär.
+    final login = username.trim().toLowerCase();
+
     try {
-      await PostgresService.signIn(
-        username: username.trim(),
-        password: password,
-      );
+      await PostgresService.signIn(username: login, password: password);
     } catch (e) {
       throw AuthException(_classify(e), e.toString());
     }
@@ -98,7 +100,7 @@ class AuthService {
       final employee = await _findEmployee();
 
       final user = AuthUser(
-        username: PostgresService.currentUser ?? username.trim(),
+        username: PostgresService.currentUser ?? login,
         role: role,
         employeeId: employee?.$1,
         employeeName: employee?.$2,

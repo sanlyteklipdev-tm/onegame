@@ -42,6 +42,8 @@ class _SignInFormState extends State<SignInForm> {
           enabled: !widget.isLoading,
           textInputAction: TextInputAction.next,
           autocorrect: false,
+          // Klawiatura ilkinji harpy uly etmesin
+          textCapitalization: TextCapitalization.none,
           decoration: InputDecoration(
             labelText: s.username,
             prefixIcon: const Icon(CupertinoIcons.person, size: 18),

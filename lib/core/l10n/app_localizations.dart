@@ -140,6 +140,23 @@ class S {
     'Когда на вас назначат бронь, она появится здесь',
     'Bookings assigned to you will appear here',
   );
+  /// Işgäre täze bron bellenende — şol pursat
+  String get newBookingTitle =>
+      _t('Täze bron', 'Новая бронь', 'New booking');
+  String newBookingBody(String title, String table, String time) => _t(
+    '$title · $table · $time',
+    '$title · $table · $time',
+    '$title · $table · $time',
+  );
+
+  /// Başlamazyndan 30 minut öň
+  String get bookingSoonTitle =>
+      _t('30 minutdan bron', 'Бронь через 30 минут', 'Booking in 30 minutes');
+
+  /// Başlaýan pursadynda
+  String get bookingNowTitle =>
+      _t('Bronuň wagty geldi', 'Время брони', 'Booking time');
+
   String get notLinkedToEmployee => _t(
     'Bu hasap hiç işgäre baglanmadyk. Administratora ýüz tutuň',
     'Эта учётная запись не привязана к сотруднику. Обратитесь к администратору',

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/app_localizations.dart';
+import '../../../core/services/worker_notification_sync.dart';
+import '../../../core/utils/formatters.dart';
+import '../../../data/models/reservation_model.dart';
 import '../../providers/auth_providers.dart';
 import '../../providers/reservation_providers.dart';
 import '../../widgets/entity_grid.dart';
@@ -37,6 +40,25 @@ class _WorkerScreenState extends ConsumerState<WorkerScreen> {
     }
   }
 
+  /// Bron sanawy üýtgände duýduryşlary sazlaýar
+  void _syncNotifications(List<ReservationModel> bookings) {
+    final s = S.of(context);
+    final tableNames = ref.read(tableNamesProvider);
+
+    String where(ReservationModel r) => tableNames[r.tableId] ?? '';
+    String when(ReservationModel r) => AppFormatters.formatTime(r.startTime);
+
+    WorkerNotificationSync.sync(
+      bookings: bookings,
+      newTitle: (_) => s.newBookingTitle,
+      newBody: (r) => s.newBookingBody(r.title, where(r), when(r)),
+      soonTitle: (_) => s.bookingSoonTitle,
+      soonBody: (r) => s.newBookingBody(r.title, where(r), when(r)),
+      startTitle: (_) => s.bookingNowTitle,
+      startBody: (r) => s.newBookingBody(r.title, where(r), when(r)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
@@ -44,6 +66,11 @@ class _WorkerScreenState extends ConsumerState<WorkerScreen> {
     final bookings = ref.watch(myReservationsProvider);
     final tableNames = ref.watch(tableNamesProvider);
     final serviceNames = ref.watch(serviceNamesProvider);
+
+    // Sanaw täzelenende duýduryşlar hem täzelenýär
+    ref.listen(myReservationsProvider, (_, next) {
+      next.whenData(_syncNotifications);
+    });
 
     return Scaffold(
       appBar: AppBar(

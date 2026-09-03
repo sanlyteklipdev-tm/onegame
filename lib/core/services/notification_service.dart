@@ -189,6 +189,43 @@ class NotificationService {
     }
   }
 
+  /// Şu pursat görkezilýän duýduryş — garaşylmaýar.
+  /// Işgäre täze bron bellenende ulanylýar.
+  Future<void> showNow({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
+    final int notificationId = id % 2147483647;
+
+    if (Platform.isWindows) {
+      LocalNotification(title: title, body: body).show();
+      return;
+    }
+
+    try {
+      await _notificationsPlugin.show(
+        notificationId,
+        title,
+        body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'billiard-booking-channel',
+            'Bron duýduryşlary',
+            channelDescription: 'Işgäre bellenen bronlar barada habar',
+            importance: Importance.max,
+            priority: Priority.high,
+            sound: const RawResourceAndroidNotificationSound('s1'),
+            playSound: true,
+            audioAttributesUsage: AudioAttributesUsage.alarm,
+          ),
+        ),
+      );
+    } catch (e) {
+      dev.log('Notification show error: $e');
+    }
+  }
+
   Future<void> showTestNotification() async {
     if (Platform.isWindows) {
       final notification = LocalNotification(
