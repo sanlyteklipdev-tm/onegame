@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../data/models/table_model.dart';
+import '../../home_screen/part/home_drawer.dart';
 
 class TablesHeader extends StatelessWidget {
   final AsyncValue<List<TableModel>> tablesAsync;
@@ -15,6 +16,7 @@ class TablesHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: Row(
         children: [
+          const HomeMenuButton(),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

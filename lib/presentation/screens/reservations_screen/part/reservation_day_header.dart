@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../providers/reservation_providers.dart';
+import '../../home_screen/part/home_drawer.dart';
 
 /// Aý ady, gün sany, hepdäniň güni we günden-güne geçiş
 class ReservationDayHeader extends ConsumerWidget {
@@ -43,6 +44,7 @@ class ReservationDayHeader extends ConsumerWidget {
         children: [
           Row(
             children: [
+              const HomeMenuButton(),
               IconButton(
                 icon: const Icon(CupertinoIcons.chevron_left, size: 20),
                 // Şu günden yza geçip bolmaýar

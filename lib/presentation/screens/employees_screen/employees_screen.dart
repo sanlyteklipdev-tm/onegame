@@ -8,6 +8,7 @@ import '../../providers/providers.dart';
 import 'part/employee_form_sheet.dart';
 import '../../widgets/entity_card.dart';
 import '../../widgets/entity_grid.dart';
+import '../home_screen/part/home_drawer.dart';
 
 class EmployeesScreen extends ConsumerStatefulWidget {
   const EmployeesScreen({super.key});
@@ -74,6 +75,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: homeMenuLeading(context),
         title: _isSearching
             ? TextField(
                 controller: _searchCtrl,

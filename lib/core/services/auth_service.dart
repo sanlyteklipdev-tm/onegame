@@ -1,6 +1,8 @@
 import 'dart:developer' as dev;
 
 import '../../data/remote/postgres_service.dart';
+import 'booking_watch_service.dart';
+import 'credential_store.dart';
 
 /// Programmadaky rol. Bazadaky topar rollara gabat gelýär:
 /// sanly_worker / sanly_manager / sanly_admin
@@ -106,6 +108,19 @@ class AuthService {
         employeeName: employee?.$2,
       );
       _current = user;
+
+      // Fon hyzmaty aýry prosesde işleýär — oňa maglumat gerek.
+      // Diňe işgär üçin: menejere we administratora fon gözegçiligi
+      // gerek däl, olar programmany özleri açýarlar.
+      if (role.isWorker && user.employeeId != null) {
+        await CredentialStore.save(
+          username: login,
+          password: password,
+          employeeId: user.employeeId,
+        );
+        await BookingWatchService.start(employeeName: user.displayName);
+      }
+
       dev.log('Auth: ${user.username} signed in as ${role.name}');
       return user;
     } catch (e) {
@@ -117,6 +132,8 @@ class AuthService {
   }
 
   static Future<void> signOut() async {
+    await BookingWatchService.stop();
+    await CredentialStore.clear();
     await PostgresService.signOut();
     _current = null;
   }

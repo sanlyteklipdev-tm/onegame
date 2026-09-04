@@ -7,6 +7,7 @@ import 'part/appearance_card.dart';
 import 'part/database_card.dart';
 import 'part/manage_tables_section.dart';
 import 'part/printer_settings_card.dart';
+import '../home_screen/part/home_drawer.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -25,11 +26,17 @@ class SettingsScreen extends ConsumerWidget {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-                child: Text(
-                  s.settings,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Row(
+                  children: [
+                    const HomeMenuButton(),
+                    Expanded(
+                      child: Text(
+                        s.settings,
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

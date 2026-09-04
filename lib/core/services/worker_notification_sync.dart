@@ -1,4 +1,5 @@
 import 'dart:developer' as dev;
+import 'dart:io';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -98,6 +99,11 @@ class WorkerNotificationSync {
     required String Function(ReservationModel) startTitle,
     required String Function(ReservationModel) startBody,
   }) async {
+    // Android-de duýduryşlary fon hyzmaty belleýär — programma hem
+    // bellese, her habar iki gezek gelerdi. Kompýuterde fon hyzmaty
+    // ýok, şonuň üçin ol ýerde şu işleýär.
+    if (Platform.isAndroid) return;
+
     if (_running) return;
 
     final signature = _signatureOf(bookings);

@@ -29,11 +29,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     super.dispose();
   }
 
-  String _messageFor(AuthFailure failure, S s) => switch (failure) {
+  /// Näbelli ýalňyşlykda "parol nädogry" diýmek nädogry bolar —
+  /// hakyky sebäbi gizlemeli däl, ýogsam näme bolýanyny tapyp bolmaýar.
+  String _messageFor(AuthException e, S s) => switch (e.failure) {
     AuthFailure.badCredentials => s.errWrongCredentials,
     AuthFailure.unreachable => s.errDbUnreachable,
     AuthFailure.noRole => s.errNoRole,
-    AuthFailure.unknown => s.errWrongCredentials,
+    AuthFailure.unknown => '${s.errorPrefix}: ${e.details}',
   };
 
   Future<void> _submit() async {
@@ -66,7 +68,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
     } on AuthException catch (e) {
-      if (mounted) setState(() => _errorText = _messageFor(e.failure, s));
+      if (mounted) setState(() => _errorText = _messageFor(e, s));
     } catch (e) {
       if (mounted) setState(() => _errorText = '${s.errorPrefix}: $e');
     } finally {

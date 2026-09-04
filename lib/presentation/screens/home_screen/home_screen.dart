@@ -5,8 +5,10 @@ import '../../../core/l10n/app_localizations.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../data/data_source.dart';
 import '../../providers/auth_providers.dart';
+import '../../providers/navigation_providers.dart';
 import '../worker_screen/worker_screen.dart';
 import 'part/home_destinations.dart';
+import 'part/home_drawer.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -16,8 +18,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  int _selectedIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
@@ -39,7 +39,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final tabs = buildHomeTabs(s, effectiveRole);
 
     // Rol çalşanda saýlanan bölüm sanawdan çykmaz ýaly
-    final index = _selectedIndex.clamp(0, tabs.length - 1);
+    final index = ref.watch(homeTabIndexProvider).clamp(0, tabs.length - 1);
+    void select(int i) => ref.read(homeTabIndexProvider.notifier).select(i);
 
     final width = MediaQuery.sizeOf(context).width;
     final isTablet = width >= 600;
@@ -51,8 +52,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: [
             NavigationRail(
               selectedIndex: index,
-              onDestinationSelected: (i) =>
-                  setState(() => _selectedIndex = i),
+              onDestinationSelected: select,
               labelType: width >= 800
                   ? NavigationRailLabelType.all
                   : NavigationRailLabelType.selected,
@@ -73,25 +73,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     }
 
-    // ── Telefon ─────────────── BottomNavigationBar
+    // ── Telefon ─────────────── süýşýän menýu
+    // Aşaky panel aýryldy: 7 bölüm ol ýere sygmaýardy, ýazgylar gysylýardy.
     return Scaffold(
+      key: homeScaffoldKey,
+      drawer: HomeDrawer(tabs: tabs),
       body: tabs[index].screen,
-      // Ulgamyň şrift ulaltmasy bölümleriň ýazgysyny kesmez ýaly çäklendirilýär
-      bottomNavigationBar: MediaQuery.withClampedTextScaling(
-        maxScaleFactor: 1.0,
-        child: NavigationBar(
-          selectedIndex: index,
-          onDestinationSelected: (i) => setState(() => _selectedIndex = i),
-          destinations: [
-            for (final t in tabs)
-              NavigationDestination(
-                icon: Icon(t.icon),
-                selectedIcon: Icon(t.selectedIcon),
-                label: t.label,
-              ),
-          ],
-        ),
-      ),
     );
   }
 }

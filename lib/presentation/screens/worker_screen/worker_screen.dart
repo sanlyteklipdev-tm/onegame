@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/app_localizations.dart';
+import '../../../core/services/booking_watch_service.dart';
 import '../../../core/services/worker_notification_sync.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../data/models/reservation_model.dart';
@@ -25,6 +26,16 @@ class WorkerScreen extends ConsumerStatefulWidget {
 
 class _WorkerScreenState extends ConsumerState<WorkerScreen> {
   int? _busyId;
+
+  @override
+  void initState() {
+    super.initState();
+    // Duýduryş we batareýa rugsatlary. Ulgamyň sazlama sahypasyny
+    // açyp bilýär — şonuň üçin ekran gurlandan soň soralýar.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => BookingWatchService.requestPermissions(),
+    );
+  }
 
   Future<void> _run(int id, Future<void> Function() action) async {
     final s = S.of(context);

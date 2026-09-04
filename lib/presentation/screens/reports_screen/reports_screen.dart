@@ -6,6 +6,7 @@ import 'part/device_filter_row.dart';
 import 'part/report_filters_section.dart';
 import 'part/report_history_sliver.dart';
 import 'part/report_revenue_card.dart';
+import '../home_screen/part/home_drawer.dart';
 
 class ReportsScreen extends ConsumerWidget {
   const ReportsScreen({super.key});
@@ -24,11 +25,17 @@ class ReportsScreen extends ConsumerWidget {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                child: Text(
-                  s.reports,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Row(
+                  children: [
+                    const HomeMenuButton(),
+                    Expanded(
+                      child: Text(
+                        s.reports,
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
